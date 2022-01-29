@@ -10,6 +10,16 @@ y_int = []
 x_bord = []
 y_bord = []
 
+# Краевые условия
+x_bc1 = []
+y_bc1 = []
+
+x_bc2 = []
+y_bc2 = []
+
+x_bc3 = []
+y_bc3 = []
+
 # Фиктивные узлы
 x_fict = []
 y_fict = []
@@ -32,14 +42,40 @@ with open ("fictitious.txt") as file:
 		x_fict.append(dcm(x))
 		y_fict.append(dcm(y))		
 
+with open ("first.txt") as file:
+	for coord in file:
+		x, y = coord.split(" ")
+		x_bc1.append(dcm(x))
+		y_bc1.append(dcm(y))				
+
+with open ("second.txt") as file:
+	for coord in file:
+		x, y = coord.split(" ")
+		x_bc2.append(dcm(x))
+		y_bc2.append(dcm(y))						
+
+with open ("third.txt") as file:
+	for coord in file:
+		x, y = coord.split(" ")
+		x_bc3.append(dcm(x))
+		y_bc3.append(dcm(y))						
+
 def main():
 	plt.grid()
 
+	# Рисуем внутренние точки
 	plt.scatter(x_int, y_int, s = 20, color = "c")
 
+	# Рисуем граничные точки
 	plt.scatter(x_bord, y_bord, s = 20, color = "k")
 
+	# Рисуем фиктивные узлы
 	plt.scatter(x_fict, y_fict, s = 10, color = "gray")	
+
+	# Рисуем краевые условия
+	plt.scatter(x_bc1, y_bc1, s = 20, color = "red")
+	plt.scatter(x_bc2, y_bc2, s = 20, color = "blue")
+	plt.scatter(x_bc3, y_bc3, s = 20, color = "green")
 
 	plt.show()
 

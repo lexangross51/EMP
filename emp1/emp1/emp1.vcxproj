@@ -141,7 +141,7 @@
   <ItemGroup>
     <ClInclude Include="diagonal_matrix.h" />
     <ClInclude Include="mesh_generator.h" />
-    <ClInclude Include="head.h" />
+    <ClInclude Include="structures.h" />
     <ClInclude Include="solver.h" />
   </ItemGroup>
   <ItemGroup>
@@ -153,8 +153,12 @@
   <ItemGroup>
     <Text Include="areas.txt" />
     <Text Include="border.txt" />
+    <Text Include="dense.txt" />
     <Text Include="fictitious.txt" />
+    <Text Include="first.txt" />
     <Text Include="internal.txt" />
+    <Text Include="second.txt" />
+    <Text Include="third.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

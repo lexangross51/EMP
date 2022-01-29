@@ -21,7 +21,7 @@
     <ClInclude Include="mesh_generator.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="head.h">
+    <ClInclude Include="structures.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="solver.h">
@@ -56,6 +56,18 @@
       <Filter>Текстовые файлы</Filter>
     </Text>
     <Text Include="internal.txt">
+      <Filter>Текстовые файлы</Filter>
+    </Text>
+    <Text Include="dense.txt">
+      <Filter>Текстовые файлы</Filter>
+    </Text>
+    <Text Include="first.txt">
+      <Filter>Текстовые файлы</Filter>
+    </Text>
+    <Text Include="second.txt">
+      <Filter>Текстовые файлы</Filter>
+    </Text>
+    <Text Include="third.txt">
       <Filter>Текстовые файлы</Filter>
     </Text>
   </ItemGroup>
