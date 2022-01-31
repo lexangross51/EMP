@@ -140,12 +140,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="diagonal_matrix.h" />
+    <ClInclude Include="fdm.h" />
     <ClInclude Include="mesh_generator.h" />
     <ClInclude Include="structures.h" />
     <ClInclude Include="solver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="diagonal_matrix.cpp" />
+    <ClCompile Include="fdm.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mesh_generator.cpp" />
     <ClCompile Include="solver.cpp" />

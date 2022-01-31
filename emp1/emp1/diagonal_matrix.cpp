@@ -1,22 +1,24 @@
 #include "diagonal_matrix.h"
 
-diagonal_matrix::diagonal_matrix(const uint32_t _dim, const uint32_t _diags_count)
+diagonal_matrix::diagonal_matrix(const uint32_t _dim, const uint32_t _diags_count, const uint32_t _zero_diags)
 {
 	dim = _dim;
+	zero_diags = _zero_diags;
 
 	diags.resize(_diags_count);
-
 	offset.resize(_diags_count);
 
 	// Число диагоналей под главной (столько же и над ней)
 	uint32_t under_main = (_diags_count - 1) / 2;
 
 	offset[0] = 0;
-	for (uint32_t i = 1; i < under_main + 1; i++)
+	for (uint32_t i = 1; i < under_main; i++)
 	{
 		offset[i] = -1 * i;
 		offset[_diags_count - under_main + i - 1] = i;
 	}
+	offset[under_main] = -1 * (under_main + _zero_diags);
+	offset[2 * under_main] = under_main + _zero_diags;
 
 	for (uint32_t i = 0; i < _diags_count; i++)
 	{
@@ -64,7 +66,7 @@ void diagonal_matrix::to_dense(const std::string dir)
 		{
 			for (uint32_t j = 0; j < dim; j++)
 				dense << std::setw(5) << std::left << matrix[i][j];
-			dense << std::endl << std::endl;
+			dense << std::endl;
 		}
 		dense.close();
 	}
@@ -105,10 +107,18 @@ double diagonal_matrix::dot(const uint32_t row, const std::vector<double>& vecto
 	uint32_t out_main = (diags.size() - 1) / 2;
 
 	// Число диагоналей под главной, которые попали в row-ую строку
-	uint32_t under_main = row > out_main ? out_main : row;
+	uint32_t under_main;
+	if (row < out_main + zero_diags)
+		under_main = row < out_main - 1 ? row : out_main - 1;
+	else
+		under_main = out_main;
 
 	// Число диагоналей над главной, которые попали в row-ую строку
-	uint32_t above_main = dim - 1 - row > out_main ? out_main : dim - 1 - row;
+	uint32_t above_main;
+	if (dim - row > out_main + zero_diags)
+		above_main = out_main;
+	else
+		above_main = dim - 1 - row > out_main - 1 ? out_main - 1 : dim - 1 - row;
 
 	// Умножаем главную диагональ
 	sum += diags[0][row] * vector[row];
@@ -121,10 +131,10 @@ double diagonal_matrix::dot(const uint32_t row, const std::vector<double>& vecto
 	}
 
 	// Умножаем элементы верхних диагоналей
-	for (uint32_t i = 1; i < above_main + 1; i++)
+	for (uint32_t i = out_main + 1; i < out_main + 1 + above_main; i++)
 	{
 		uint32_t k = abs(offset[i]);
-		sum += diags[out_main + k][row] * vector[row + i];
+		sum += diags[i][row] * vector[row + k];
 	}
 
 	return sum;
@@ -138,8 +148,20 @@ void diagonal_matrix::make_dom()
 		diags[0][row] =  row == 0 ? 1.0 : 0.0;
 
 		uint32_t out_main = (diags.size() - 1) / 2;
-		uint32_t under_main = row > out_main ? out_main : row;
-		uint32_t above_main = dim - 1 - row > out_main ? out_main : dim - 1 - row;
+
+		// Число диагоналей под главной, которые попали в row-ую строку
+		uint32_t under_main;
+		if (row < out_main + zero_diags)
+			under_main = row < out_main - 1 ? row : out_main - 1;
+		else
+			under_main = out_main;
+
+		// Число диагоналей над главной, которые попали в row-ую строку
+		uint32_t above_main;
+		if (dim - row > out_main + zero_diags)
+			above_main = out_main;
+		else
+			above_main = dim - 1 - row > out_main - 1 ? out_main - 1 : dim - 1 - row;
 
 		for (uint32_t i = 1; i < under_main + 1; i++)
 		{
@@ -147,10 +169,10 @@ void diagonal_matrix::make_dom()
 			diags[0][row] += abs(diags[i][row - k]);
 		}
 
-		for (uint32_t i = 1; i < above_main + 1; i++)
+		for (uint32_t i = out_main + 1; i < out_main + 1 + above_main; i++)
 		{
 			uint32_t k = abs(offset[i]);
-			diags[0][row] += abs(diags[out_main + k][row]);
+			diags[0][row] += abs(diags[i][row]);
 		}
 	}
 }

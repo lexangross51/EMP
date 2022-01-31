@@ -6,8 +6,10 @@
 
 class diagonal_matrix
 {
+	friend class fdm;
+
 public:
-	diagonal_matrix(const uint32_t _dim, const uint32_t _diags_count);
+	diagonal_matrix(const uint32_t _dim, const uint32_t _diags_count, const uint32_t _zero_diags);
 
 	inline uint32_t get_size(void) const { return dim; }
 
@@ -19,8 +21,11 @@ public:
 
 	void to_dense(std::string file_to_save);
 
+
+
 public:
 	uint32_t dim;								// Размер матрицы
+	uint32_t zero_diags;						// Кол-во нулевых диагоналей
 	std::vector<std::vector<double>> diags;		// Диагонали
 	std::vector<int> offset;					// Смещения побочных диагоналей
 												// относительно главной

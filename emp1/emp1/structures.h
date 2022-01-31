@@ -4,8 +4,11 @@
 #include <iostream>
 #include <algorithm>
 #include <iomanip>
+#include <functional>
 
 const std::string directory = "C:\\Users\\lexan\\OneDrive\\Рабочий стол\\НГТУ\\6 семестр\\Уравнения математической физики\\emp1\\emp1\\";
+
+typedef std::function<double(double, double)> function2D;
 
 struct point
 {
