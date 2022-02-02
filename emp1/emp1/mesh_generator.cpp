@@ -1,6 +1,6 @@
-#include "mesh_generator.h"
+п»ї#include "mesh_generator.h"
 
-// Читаем данные о расчетной области
+// Р§РёС‚Р°РµРј РґР°РЅРЅС‹Рµ Рѕ СЂР°СЃС‡РµС‚РЅРѕР№ РѕР±Р»Р°СЃС‚Рё
 void mesh_generator::input(const std::string dir)
 {
 	n_omega = nx = ny = 0;
@@ -47,7 +47,7 @@ void mesh_generator::input(const std::string dir)
 		{
 			uint32_t startx, endx, starty, endy;
 			double lambda, gamma;
-			uint16_t bc1, bc2, bc3, bc4;
+			int bc1, bc2, bc3, bc4;
 
 			file >> startx >> endx >> starty >> endy
 				 >> lambda >> gamma
@@ -58,10 +58,10 @@ void mesh_generator::input(const std::string dir)
 			point p3(X_lines[startx - 1], Y_lines[endy - 1]);
 			point p4(X_lines[endx - 1], Y_lines[endy - 1]);
 
-			areas[i].borders[0] = { {p1, p2},  border::bound_cond(bc1) };
-			areas[i].borders[1] = { {p1, p3},  border::bound_cond(bc2) };
-			areas[i].borders[2] = { {p3, p4},  border::bound_cond(bc3) };
-			areas[i].borders[3] = { {p2, p4},  border::bound_cond(bc4) };
+			areas[i].borders[0] = { {p1, p2}, border::bound_cond(bc1) };
+			areas[i].borders[1] = { {p1, p3}, border::bound_cond(bc2) };
+			areas[i].borders[2] = { {p3, p4}, border::bound_cond(bc3) };
+			areas[i].borders[3] = { {p2, p4}, border::bound_cond(bc4) };
 			areas[i].lambda = lambda;
 			areas[i].gamma = gamma;
 		}
@@ -71,14 +71,14 @@ void mesh_generator::input(const std::string dir)
 	else throw "Can't open file";
 }
 
-// Генерируем массивы X и Y с учетом разбиения
-void mesh_generator::generate_xy(const grid_type type)
+// Р“РµРЅРµСЂРёСЂСѓРµРј РјР°СЃСЃРёРІС‹ X Рё Y СЃ СѓС‡РµС‚РѕРј СЂР°Р·Р±РёРµРЅРёСЏ
+void mesh_generator::generate_xy(const mesh::mesh_type type)
 {
 	double dx, dy;
 	double coord;
 
-	// Если сетка должна быть равномерной
-	if (type == grid_type::UNIFORM)
+	// Р•СЃР»Рё СЃРµС‚РєР° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ СЂР°РІРЅРѕРјРµСЂРЅРѕР№
+	if (type == mesh::mesh_type::UNIFORM)
 	{
 		dx = (X_lines[nx - 1] - X_lines[0]) / part[0][0];
 		dy = (Y_lines[ny - 1] - Y_lines[0]) / part[1][0];
@@ -128,7 +128,7 @@ void mesh_generator::generate_xy(const grid_type type)
 		}
 
 	}
-	// Если сетка должна быть неравномерной
+	// Р•СЃР»Рё СЃРµС‚РєР° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РЅРµСЂР°РІРЅРѕРјРµСЂРЅРѕР№
 	else
 	{
 		for (uint32_t i = 0; i < nx - 1; i++)
@@ -172,11 +172,15 @@ void mesh_generator::generate_xy(const grid_type type)
 	part.clear();
 }
 
-// Строим сетку с учетом границ подобластей
-void mesh_generator::build_mesh(std::vector<node>& mesh, grid_type type)
+// РЎС‚СЂРѕРёРј СЃРµС‚РєСѓ СЃ СѓС‡РµС‚РѕРј РіСЂР°РЅРёС† РїРѕРґРѕР±Р»Р°СЃС‚РµР№
+void mesh_generator::build_mesh(mesh& mesh, mesh::mesh_type type)
 {
 	input(directory);
 	generate_xy(type);
+
+	mesh.set_type(type);
+	mesh.set_width(X.size() - 1);
+	mesh.set_height(Y.size() - 1);
 
 	for (uint32_t i = 0; i < Y.size(); i++)
 		for (uint32_t j = 0; j < X.size(); j++)
@@ -190,56 +194,56 @@ void mesh_generator::build_mesh(std::vector<node>& mesh, grid_type type)
 				is_in_area(p, area_num);
 
 				if (node_type == node::node_type::INTERNAL)
-					mesh.push_back(node(p, j, i, node_type,
+					mesh.add_node(node(p, j, i, node_type,
 						border::bound_cond::NONE,
 						areas[area_num].lambda,
 						areas[area_num].gamma));
 				else
-					mesh.push_back(node(p, j, i, node_type,
+					mesh.add_node(node(p, j, i, node_type,
 						areas[area_num].borders[what_border(p, area_num)].bc,
 						areas[area_num].lambda,
 						areas[area_num].gamma));
 			}
 			else
-				mesh.push_back(node(p, 0, 0, node_type));
+				mesh.add_node(node(p, 0, 0, node_type));
 		}
 
 	X.clear();
 	Y.clear();
 	areas.clear();
-	
-	write_by_type(mesh, directory);
+
+	mesh.save(directory);
 }
 
-// Определяем тип узла: внутренний, граничный или фиктивный
+// РћРїСЂРµРґРµР»СЏРµРј С‚РёРї СѓР·Р»Р°: РІРЅСѓС‚СЂРµРЅРЅРёР№, РіСЂР°РЅРёС‡РЅС‹Р№ РёР»Рё С„РёРєС‚РёРІРЅС‹Р№
 node::node_type mesh_generator::what_type(const point& p, const uint32_t i, const uint32_t j)
 {
 	uint32_t cnt = 0;
 
 	uint32_t neighbor_cnt = 0;
 
-	// Проверим сначала, не является ли узел фиктивным
+	// РџСЂРѕРІРµСЂРёРј СЃРЅР°С‡Р°Р»Р°, РЅРµ СЏРІР»СЏРµС‚СЃСЏ Р»Рё СѓР·РµР» С„РёРєС‚РёРІРЅС‹Рј
 	for (const auto& it : areas)
 	{
 		if (!(p.x >= it.borders[0].limits[0].x && p.x <= it.borders[0].limits[1].x &&
 			p.y >= it.borders[1].limits[0].y && p.y <= it.borders[1].limits[1].y))
 			cnt++;
 	}
-	// Если число областей, которым не принадлжит точка, равно общему числу областей
-	// то узле - фиктивный
+	// Р•СЃР»Рё С‡РёСЃР»Рѕ РѕР±Р»Р°СЃС‚РµР№, РєРѕС‚РѕСЂС‹Рј РЅРµ РїСЂРёРЅР°РґР»Р¶РёС‚ С‚РѕС‡РєР°, СЂР°РІРЅРѕ РѕР±С‰РµРјСѓ С‡РёСЃР»Сѓ РѕР±Р»Р°СЃС‚РµР№
+	// С‚Рѕ СѓР·Р»Рµ - С„РёРєС‚РёРІРЅС‹Р№
 	if (cnt == areas.size())
 		return node::node_type::FICTITIOUS;
 
-	// Определим сколько соседей есть у точки
-	// Возьмем узлы слева, справа, снизу и сверху от текущего
+	// РћРїСЂРµРґРµР»РёРј СЃРєРѕР»СЊРєРѕ СЃРѕСЃРµРґРµР№ РµСЃС‚СЊ Сѓ С‚РѕС‡РєРё
+	// Р’РѕР·СЊРјРµРј СѓР·Р»С‹ СЃР»РµРІР°, СЃРїСЂР°РІР°, СЃРЅРёР·Сѓ Рё СЃРІРµСЂС…Сѓ РѕС‚ С‚РµРєСѓС‰РµРіРѕ
 	uint32_t x_next = i + 1;
 	int x_prev = i - 1;
 
 	uint32_t y_next = j + 1;
 	int y_prev = j - 1;
 
-	// Если вышло так, что соседние узлы либо по X, либо по Y
-	// вышли за пределы массивов X или Y, то узел был граничным
+	// Р•СЃР»Рё РІС‹С€Р»Рѕ С‚Р°Рє, С‡С‚Рѕ СЃРѕСЃРµРґРЅРёРµ СѓР·Р»С‹ Р»РёР±Рѕ РїРѕ X, Р»РёР±Рѕ РїРѕ Y
+	// РІС‹С€Р»Рё Р·Р° РїСЂРµРґРµР»С‹ РјР°СЃСЃРёРІРѕРІ X РёР»Рё Y, С‚Рѕ СѓР·РµР» Р±С‹Р» РіСЂР°РЅРёС‡РЅС‹Рј
 	if (x_prev < 0 || x_next > X.size() - 1 ||
 		y_prev < 0 || y_next > Y.size() - 1)
 		return node::node_type::BORDER;
@@ -254,15 +258,15 @@ node::node_type mesh_generator::what_type(const point& p, const uint32_t i, cons
 	if (is_in_area(point(X[i], Y[y_next]), c))
 		neighbor_cnt++;
 
-	// Если у узла 4 соседа, то он внутренний
+	// Р•СЃР»Рё Сѓ СѓР·Р»Р° 4 СЃРѕСЃРµРґР°, С‚Рѕ РѕРЅ РІРЅСѓС‚СЂРµРЅРЅРёР№
 	if (neighbor_cnt == 4)
 		return node::node_type::INTERNAL;
-	// Иначе граничный
+	// РРЅР°С‡Рµ РіСЂР°РЅРёС‡РЅС‹Р№
 	else
 		return node::node_type::BORDER;
 }
 
-// Возвращает номер границы, которой принадлежит точка
+// Р’РѕР·РІСЂР°С‰Р°РµС‚ РЅРѕРјРµСЂ РіСЂР°РЅРёС†С‹, РєРѕС‚РѕСЂРѕР№ РїСЂРёРЅР°РґР»РµР¶РёС‚ С‚РѕС‡РєР°
 uint32_t mesh_generator::what_border(const point& p, const uint32_t area_num)
 {
 	for (uint32_t i = 0; i < 4; i++)
@@ -277,8 +281,8 @@ uint32_t mesh_generator::what_border(const point& p, const uint32_t area_num)
 	}
 }
 
-// Проверяет, находится ли точка в области и возвращает номер области, 
-// если точка принадлежит ей
+// РџСЂРѕРІРµСЂСЏРµС‚, РЅР°С…РѕРґРёС‚СЃСЏ Р»Рё С‚РѕС‡РєР° РІ РѕР±Р»Р°СЃС‚Рё Рё РІРѕР·РІСЂР°С‰Р°РµС‚ РЅРѕРјРµСЂ РѕР±Р»Р°СЃС‚Рё, 
+// РµСЃР»Рё С‚РѕС‡РєР° РїСЂРёРЅР°РґР»РµР¶РёС‚ РµР№
 bool mesh_generator::is_in_area(const point& p, uint32_t &area_num)
 {
 	for (uint32_t i = 0; i < areas.size(); i++)
@@ -293,47 +297,4 @@ bool mesh_generator::is_in_area(const point& p, uint32_t &area_num)
 		}
 	}
 	return false;
-}
-
-// Записать узлы сетки в файл в зависимости от типа узла
-void mesh_generator::write_by_type(const std::vector<node>& mesh, 
-								   const std::string dir)
-{
-	std::ofstream i(dir + "internal.txt");
-	std::ofstream b(dir + "border.txt");
-	std::ofstream f(dir + "fictitious.txt");
-	std::ofstream fi(dir + "first.txt");
-	std::ofstream se(dir + "second.txt");
-	std::ofstream th(dir + "third.txt");
-
-	if (i.is_open() && b.is_open() && f.is_open() &&
-		fi.is_open() && se.is_open() && th.is_open())
-	{
-		for (const auto& it : mesh)
-		{
-			if (it.type == node::node_type::INTERNAL)
-				i << it.p.x << " " << it.p.y << std::endl;
-			else if (it.type == node::node_type::BORDER)
-			{
-				b << it.p.x << " " << it.p.y << std::endl;
-
-				if (it.bc == border::bound_cond::DIRICHLET)
-					fi << it.p.x << " " << it.p.y << std::endl;
-				else if (it.bc == border::bound_cond::NEUMANN)
-					se << it.p.x << " " << it.p.y << std::endl;
-				else if (it.bc == border::bound_cond::NEWTON)
-					th << it.p.x << " " << it.p.y << std::endl;
-			}
-			else
-				f << it.p.x << " " << it.p.y << std::endl;
-		}
-		i.close();
-		b.close();
-		f.close();
-		fi.close();
-		se.close();
-		th.close();
-	}
-	else
-		std::cerr << "Can't open files" << std::endl;
 }

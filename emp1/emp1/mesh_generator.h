@@ -1,53 +1,46 @@
-#pragma once
+п»ї#pragma once
 #ifndef MESH_GENERATOR_H
 #define MESH_GENERATOR_H
 
 #include "structures.h"
+#include "mesh.h"
 
 class mesh_generator
 {
 public:
-	enum class grid_type
-	{
-		UNIFORM,
-		NONUNIFORM
-	};
-
 	mesh_generator()
 	{
 		n_omega = 0;
 		nx = ny = 0;
 	}
 
-	void build_mesh(std::vector<node>& mesh, grid_type type);
+	void build_mesh(mesh& mesh, mesh::mesh_type type);
 
 private:
-	uint32_t n_omega;						 // Кол-во подобластей
-	uint32_t nx, ny;						 // Кол-во элементов в массивах 
-											 // X_lines и Y_lines соответственно
+	uint32_t n_omega;						 // РљРѕР»-РІРѕ РїРѕРґРѕР±Р»Р°СЃС‚РµР№
+	uint32_t nx, ny;						 // РљРѕР»-РІРѕ СЌР»РµРјРµРЅС‚РѕРІ РІ РјР°СЃСЃРёРІР°С… 
+											 // X_lines Рё Y_lines СЃРѕРѕС‚РІРµС‚СЃС‚РІРµРЅРЅРѕ
 
-	std::vector<area> areas;				 // Массив с подобластями
+	std::vector<area> areas;				 // РњР°СЃСЃРёРІ СЃ РїРѕРґРѕР±Р»Р°СЃС‚СЏРјРё
 		
-	std::vector<double> X_lines;			 // Координатные линии по X
-	std::vector<double> Y_lines;			 // Координатные линии по Y
+	std::vector<double> X_lines;			 // РљРѕРѕСЂРґРёРЅР°С‚РЅС‹Рµ Р»РёРЅРёРё РїРѕ X
+	std::vector<double> Y_lines;			 // РљРѕРѕСЂРґРёРЅР°С‚РЅС‹Рµ Р»РёРЅРёРё РїРѕ Y
 
-	std::vector<std::vector<uint32_t>> part; // Массив с информацией о разбиениях
-	std::vector<std::vector<double>> kr;	 // Массив с коэффициентами разрядки
+	std::vector<std::vector<uint32_t>> part; // РњР°СЃСЃРёРІ СЃ РёРЅС„РѕСЂРјР°С†РёРµР№ Рѕ СЂР°Р·Р±РёРµРЅРёСЏС…
+	std::vector<std::vector<double>> kr;	 // РњР°СЃСЃРёРІ СЃ РєРѕСЌС„С„РёС†РёРµРЅС‚Р°РјРё СЂР°Р·СЂСЏРґРєРё
 
-	std::vector<double> X;					 // Массив X с учетом разбиений
-	std::vector<double> Y;					 // Массив Y с учетом разбиений
+	std::vector<double> X;					 // РњР°СЃСЃРёРІ X СЃ СѓС‡РµС‚РѕРј СЂР°Р·Р±РёРµРЅРёР№
+	std::vector<double> Y;					 // РњР°СЃСЃРёРІ Y СЃ СѓС‡РµС‚РѕРј СЂР°Р·Р±РёРµРЅРёР№
 
 	void input(const std::string dir);
 
-	void generate_xy(const grid_type type);
+	void generate_xy(const mesh::mesh_type type);
 
 	node::node_type what_type(const point &p, const uint32_t i, const uint32_t j);
 
 	uint32_t what_border(const point& p, const uint32_t area_num);
 
 	bool is_in_area(const point& p, uint32_t &area_num);
-
-	void write_by_type(const std::vector<node>& mesh, const std::string dir);
 };
 
 #endif

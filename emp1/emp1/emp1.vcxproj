@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClInclude Include="diagonal_matrix.h" />
     <ClInclude Include="fdm.h" />
+    <ClInclude Include="mesh.h" />
     <ClInclude Include="mesh_generator.h" />
     <ClInclude Include="structures.h" />
     <ClInclude Include="solver.h" />
@@ -149,6 +150,7 @@
     <ClCompile Include="diagonal_matrix.cpp" />
     <ClCompile Include="fdm.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="mesh.cpp" />
     <ClCompile Include="mesh_generator.cpp" />
     <ClCompile Include="solver.cpp" />
   </ItemGroup>
@@ -159,6 +161,7 @@
     <Text Include="fictitious.txt" />
     <Text Include="first.txt" />
     <Text Include="internal.txt" />
+    <Text Include="result.txt" />
     <Text Include="second.txt" />
     <Text Include="third.txt" />
   </ItemGroup>

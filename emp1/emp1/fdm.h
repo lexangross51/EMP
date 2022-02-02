@@ -1,23 +1,28 @@
-#pragma once
+п»ї#pragma once
 #ifndef FDM_H
 #define FDM_H
 
 #include "diagonal_matrix.h"
-#include "mesh_generator.h"
+#include "mesh.h"
+#include "solver.h"
 
 class fdm
 {
 public:
-	void mesh_to_slae(std::vector<node>& mesh);
+	void mesh_to_slae(mesh& mesh, function2D u, function2D f);
 
 	void calculate();
 
 private:
-	diagonal_matrix* A;		// Матрица СЛАУ
-	std::vector<double> b;	// Вектор правой части
-	std::vector<double> q;	// Результат
+	diagonal_matrix* A;		// РњР°С‚СЂРёС†Р° РЎР›РђРЈ
+	std::vector<double> b;	// Р’РµРєС‚РѕСЂ РїСЂР°РІРѕР№ С‡Р°СЃС‚Рё
+	std::vector<double> q;	// Р РµР·СѓР»СЊС‚Р°С‚
 
-	uint32_t slae_size;		// Размер СЛАУ
+	uint32_t slae_size;		// Р Р°Р·РјРµСЂ РЎР›РђРЈ
+
+	void write(	const std::string dir, 
+				const double w, 
+				const std::pair<uint32_t, double> result);
 };
 
 #endif

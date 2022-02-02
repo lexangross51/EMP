@@ -1,4 +1,4 @@
-#include "diagonal_matrix.h"
+п»ї#include "diagonal_matrix.h"
 
 diagonal_matrix::diagonal_matrix(const uint32_t _dim, const uint32_t _diags_count, const uint32_t _zero_diags)
 {
@@ -8,7 +8,7 @@ diagonal_matrix::diagonal_matrix(const uint32_t _dim, const uint32_t _diags_coun
 	diags.resize(_diags_count);
 	offset.resize(_diags_count);
 
-	// Число диагоналей под главной (столько же и над ней)
+	// Р§РёСЃР»Рѕ РґРёР°РіРѕРЅР°Р»РµР№ РїРѕРґ РіР»Р°РІРЅРѕР№ (СЃС‚РѕР»СЊРєРѕ Р¶Рµ Рё РЅР°Рґ РЅРµР№)
 	uint32_t under_main = (_diags_count - 1) / 2;
 
 	offset[0] = 0;
@@ -29,22 +29,22 @@ diagonal_matrix::diagonal_matrix(const uint32_t _dim, const uint32_t _diags_coun
 	}
 }
 
-// Перевести матрицу в плотный формат
+// РџРµСЂРµРІРµСЃС‚Рё РјР°С‚СЂРёС†Сѓ РІ РїР»РѕС‚РЅС‹Р№ С„РѕСЂРјР°С‚
 void diagonal_matrix::to_dense(const std::string dir)
 {
-	// Количество диагоналей в нижнем(верхнем) треугольнике
+	// РљРѕР»РёС‡РµСЃС‚РІРѕ РґРёР°РіРѕРЅР°Р»РµР№ РІ РЅРёР¶РЅРµРј(РІРµСЂС…РЅРµРј) С‚СЂРµСѓРіРѕР»СЊРЅРёРєРµ
 	uint32_t under_main = (diags.size() - 1) / 2;
 
 	matrix.resize(dim);
 	for (int i = 0; i < dim; i++)
 		matrix[i].resize(dim);
 
-	// Проходим по нижнему треугольнику, захватывая главную диагональ
-	// Элементы верхнего треугольника будут получены симметричным 
-	// отражением индексов
+	// РџСЂРѕС…РѕРґРёРј РїРѕ РЅРёР¶РЅРµРјСѓ С‚СЂРµСѓРіРѕР»СЊРЅРёРєСѓ, Р·Р°С…РІР°С‚С‹РІР°СЏ РіР»Р°РІРЅСѓСЋ РґРёР°РіРѕРЅР°Р»СЊ
+	// Р­Р»РµРјРµРЅС‚С‹ РІРµСЂС…РЅРµРіРѕ С‚СЂРµСѓРіРѕР»СЊРЅРёРєР° Р±СѓРґСѓС‚ РїРѕР»СѓС‡РµРЅС‹ СЃРёРјРјРµС‚СЂРёС‡РЅС‹Рј 
+	// РѕС‚СЂР°Р¶РµРЅРёРµРј РёРЅРґРµРєСЃРѕРІ
 	for (uint32_t i = 0; i < under_main + 1; i++)
 	{
-		// k - смещение побочной диагонали относительно главной
+		// k - СЃРјРµС‰РµРЅРёРµ РїРѕР±РѕС‡РЅРѕР№ РґРёР°РіРѕРЅР°Р»Рё РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РіР»Р°РІРЅРѕР№
 		uint32_t k = abs(offset[i]);
 		for (uint32_t j = 0; j < diags[i].size(); j++, k++)
 		{
@@ -65,21 +65,28 @@ void diagonal_matrix::to_dense(const std::string dir)
 		for (uint32_t i = 0; i < dim; i++)
 		{
 			for (uint32_t j = 0; j < dim; j++)
-				dense << std::setw(5) << std::left << matrix[i][j];
+			{
+				if (matrix[i][j] == 0.0)
+					dense << std::setw(5) << std::left << ".";
+				else
+					dense << std::setw(5) << std::left << matrix[i][j];
+			}
 			dense << std::endl;
 		}
 		dense.close();
 	}
 	else
 		throw "Can't open file";
+
+	matrix.clear();
 }
 
-// Умножить матрицу на вектор
+// РЈРјРЅРѕР¶РёС‚СЊ РјР°С‚СЂРёС†Сѓ РЅР° РІРµРєС‚РѕСЂ
 std::unique_ptr<std::vector<double>> diagonal_matrix::dot(const std::vector<double>& vector)
 {
 	auto res = std::make_unique<std::vector<double>>(vector.size());
 
-	// Число диагоналей в нижнем (верхнем) треугольнике
+	// Р§РёСЃР»Рѕ РґРёР°РіРѕРЅР°Р»РµР№ РІ РЅРёР¶РЅРµРј (РІРµСЂС…РЅРµРј) С‚СЂРµСѓРіРѕР»СЊРЅРёРєРµ
 	uint32_t under_main = (diags.size() - 1) / 2;
 
 	for (uint32_t i = 0; i < under_main + 1; i++)
@@ -98,39 +105,39 @@ std::unique_ptr<std::vector<double>> diagonal_matrix::dot(const std::vector<doub
 	return res;
 }
 
-// Умножить строку матрицы на вектор
+// РЈРјРЅРѕР¶РёС‚СЊ СЃС‚СЂРѕРєСѓ РјР°С‚СЂРёС†С‹ РЅР° РІРµРєС‚РѕСЂ
 double diagonal_matrix::dot(const uint32_t row, const std::vector<double>& vector)
 {
 	double sum = 0.0;
 
-	// Число диагоналей под(над) главной
+	// Р§РёСЃР»Рѕ РґРёР°РіРѕРЅР°Р»РµР№ РїРѕРґ(РЅР°Рґ) РіР»Р°РІРЅРѕР№
 	uint32_t out_main = (diags.size() - 1) / 2;
 
-	// Число диагоналей под главной, которые попали в row-ую строку
+	// Р§РёСЃР»Рѕ РґРёР°РіРѕРЅР°Р»РµР№ РїРѕРґ РіР»Р°РІРЅРѕР№, РєРѕС‚РѕСЂС‹Рµ РїРѕРїР°Р»Рё РІ row-СѓСЋ СЃС‚СЂРѕРєСѓ
 	uint32_t under_main;
 	if (row < out_main + zero_diags)
 		under_main = row < out_main - 1 ? row : out_main - 1;
 	else
 		under_main = out_main;
 
-	// Число диагоналей над главной, которые попали в row-ую строку
+	// Р§РёСЃР»Рѕ РґРёР°РіРѕРЅР°Р»РµР№ РЅР°Рґ РіР»Р°РІРЅРѕР№, РєРѕС‚РѕСЂС‹Рµ РїРѕРїР°Р»Рё РІ row-СѓСЋ СЃС‚СЂРѕРєСѓ
 	uint32_t above_main;
 	if (dim - row > out_main + zero_diags)
 		above_main = out_main;
 	else
 		above_main = dim - 1 - row > out_main - 1 ? out_main - 1 : dim - 1 - row;
 
-	// Умножаем главную диагональ
+	// РЈРјРЅРѕР¶Р°РµРј РіР»Р°РІРЅСѓСЋ РґРёР°РіРѕРЅР°Р»СЊ
 	sum += diags[0][row] * vector[row];
 
-	// Умножаем элементы нижних диагоналей
+	// РЈРјРЅРѕР¶Р°РµРј СЌР»РµРјРµРЅС‚С‹ РЅРёР¶РЅРёС… РґРёР°РіРѕРЅР°Р»РµР№
 	for (uint32_t i = 1; i < under_main + 1; i++)
 	{
 		uint32_t k = abs(offset[i]);
 		sum += diags[i][row - k] * vector[row - k];
 	}
 
-	// Умножаем элементы верхних диагоналей
+	// РЈРјРЅРѕР¶Р°РµРј СЌР»РµРјРµРЅС‚С‹ РІРµСЂС…РЅРёС… РґРёР°РіРѕРЅР°Р»РµР№
 	for (uint32_t i = out_main + 1; i < out_main + 1 + above_main; i++)
 	{
 		uint32_t k = abs(offset[i]);
@@ -140,7 +147,7 @@ double diagonal_matrix::dot(const uint32_t row, const std::vector<double>& vecto
 	return sum;
 }
 
-// Сделать диагональное преобладание
+// РЎРґРµР»Р°С‚СЊ РґРёР°РіРѕРЅР°Р»СЊРЅРѕРµ РїСЂРµРѕР±Р»Р°РґР°РЅРёРµ
 void diagonal_matrix::make_dom()
 {
 	for (uint32_t row = 0; row < dim; row++)
@@ -149,14 +156,14 @@ void diagonal_matrix::make_dom()
 
 		uint32_t out_main = (diags.size() - 1) / 2;
 
-		// Число диагоналей под главной, которые попали в row-ую строку
+		// Р§РёСЃР»Рѕ РґРёР°РіРѕРЅР°Р»РµР№ РїРѕРґ РіР»Р°РІРЅРѕР№, РєРѕС‚РѕСЂС‹Рµ РїРѕРїР°Р»Рё РІ row-СѓСЋ СЃС‚СЂРѕРєСѓ
 		uint32_t under_main;
 		if (row < out_main + zero_diags)
 			under_main = row < out_main - 1 ? row : out_main - 1;
 		else
 			under_main = out_main;
 
-		// Число диагоналей над главной, которые попали в row-ую строку
+		// Р§РёСЃР»Рѕ РґРёР°РіРѕРЅР°Р»РµР№ РЅР°Рґ РіР»Р°РІРЅРѕР№, РєРѕС‚РѕСЂС‹Рµ РїРѕРїР°Р»Рё РІ row-СѓСЋ СЃС‚СЂРѕРєСѓ
 		uint32_t above_main;
 		if (dim - row > out_main + zero_diags)
 			above_main = out_main;

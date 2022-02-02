@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 #include <vector>
 #include <fstream>
 #include <iostream>
@@ -6,7 +6,7 @@
 #include <iomanip>
 #include <functional>
 
-const std::string directory = "C:\\Users\\lexan\\OneDrive\\Рабочий стол\\НГТУ\\6 семестр\\Уравнения математической физики\\emp1\\emp1\\";
+const std::string directory = "C:\\Users\\lexan\\OneDrive\\Р Р°Р±РѕС‡РёР№ СЃС‚РѕР»\\РќР“РўРЈ\\6 СЃРµРјРµСЃС‚СЂ\\РЈСЂР°РІРЅРµРЅРёСЏ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕР№ С„РёР·РёРєРё\\emp1\\emp1\\";
 
 typedef std::function<double(double, double)> function2D;
 
@@ -19,56 +19,27 @@ struct point
 		x(_x), y(_y) {};
 };
 
-// Граница: задает пределы (2 точки) и тип краевого
+// Р“СЂР°РЅРёС†Р°: Р·Р°РґР°РµС‚ РїСЂРµРґРµР»С‹ (2 С‚РѕС‡РєРё) Рё С‚РёРї РєСЂР°РµРІРѕРіРѕ
 struct border
 {
 	enum class bound_cond
 	{
 		NONE,
 		DIRICHLET,
-		NEUMANN,
-		NEWTON
+		P_NEUMANN = 2,
+		M_NEUMANN = -2,
+		P_NEWTON = 3,
+		M_NEWTON = -3,
 	};
 
 	point limits[2];
 	bound_cond bc = bound_cond::NONE;
 };
 
-// Элементарная область: 4 границы и коэффициенты
+// Р­Р»РµРјРµРЅС‚Р°СЂРЅР°СЏ РѕР±Р»Р°СЃС‚СЊ: 4 РіСЂР°РЅРёС†С‹ Рё РєРѕСЌС„С„РёС†РёРµРЅС‚С‹
 struct area
 {
 	border borders[4];
 	double lambda = 0.0;
 	double gamma = 0.0;
-};
-
-// Узел сетки: 
-// координаты, 
-// позиции в массивах X и Y, 
-// тип (внутренний, граничный, фиктивный)
-// тип краевого
-// коэффициенты лямбда и бета
-struct node
-{
-	enum class node_type 
-	{ 
-		INTERNAL, 
-		BORDER, 
-		FICTITIOUS 
-	};
-
-	point p;
-	uint32_t x_pos, y_pos;
-	node_type type;
-	border::bound_cond bc;
-	double lambda;
-	double gamma;
-
-	node(	
-			point& _p, uint32_t i, uint32_t j, 
-			node_type _type = node_type::FICTITIOUS, 
-			border::bound_cond _bc = border::bound_cond::NONE,
-			double _lambda = 0.0, double _gamma = 0.0
-		) :
-		p(_p), x_pos(i), y_pos(j), type(_type), bc(_bc), lambda(_lambda), gamma(_gamma) {};
 };

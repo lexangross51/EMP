@@ -1,6 +1,6 @@
-#include "solver.h"
+п»ї#include "solver.h"
 
-// Задать параметры для решения СЛАУ
+// Р—Р°РґР°С‚СЊ РїР°СЂР°РјРµС‚СЂС‹ РґР»СЏ СЂРµС€РµРЅРёСЏ РЎР›РђРЈ
 void solver::set_parameters(const uint32_t _max_iter, 
 							const double _eps)
 {
@@ -8,14 +8,14 @@ void solver::set_parameters(const uint32_t _max_iter,
 	eps = _eps;
 }
 
-// Задать начальное приближение
+// Р—Р°РґР°С‚СЊ РЅР°С‡Р°Р»СЊРЅРѕРµ РїСЂРёР±Р»РёР¶РµРЅРёРµ
 void solver::set_initial_approx(std::vector<double>& vector, const uint32_t size)
 {
 	vector.clear();
-	vector.resize(size, 0);
+	vector.resize(size, 1);
 }
 
-// Метод Гаусса - Зейделя
+// РњРµС‚РѕРґ Р“Р°СѓСЃСЃР° - Р—РµР№РґРµР»СЏ
 void solver::Gauss_Seidel(	const double w,
 							diagonal_matrix& A,
 							const std::vector<double>& b,
@@ -25,7 +25,7 @@ void solver::Gauss_Seidel(	const double w,
 		result[i] += w * (b[i] - A.dot(i, result)) / A.get_diag_elem(0, i);
 }
 
-// Решить систему
+// Р РµС€РёС‚СЊ СЃРёСЃС‚РµРјСѓ
 std::pair<uint32_t, double> solver::solve(	const double w,
 											diagonal_matrix& A,
 											const std::vector<double>& b,
@@ -46,7 +46,7 @@ std::pair<uint32_t, double> solver::solve(	const double w,
 	return std::make_pair(iters, residual(A, b, result));
 }
 
-// Посчитать норму вектора
+// РџРѕСЃС‡РёС‚Р°С‚СЊ РЅРѕСЂРјСѓ РІРµРєС‚РѕСЂР°
 double solver::norm(const std::vector<double>& vector)
 {
 	double scalar = 0.0;
@@ -57,7 +57,7 @@ double solver::norm(const std::vector<double>& vector)
 	return sqrt(scalar);
 }
 
-// Посчитать относительную невязку
+// РџРѕСЃС‡РёС‚Р°С‚СЊ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅСѓСЋ РЅРµРІСЏР·РєСѓ
 double solver::residual(diagonal_matrix& A,
 						const std::vector<double>& b,
 						std::vector<double>& result)

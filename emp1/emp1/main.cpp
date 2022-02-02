@@ -1,18 +1,31 @@
-#include <iostream>
+п»ї#include <iostream>
 #include "mesh_generator.h"
+#include "mesh.h"
 #include "diagonal_matrix.h"
 #include "solver.h"
 #include "fdm.h"
 
+function2D u = [](double x, double y)
+{
+	return x + y;
+};
+
+function2D f = [](double x, double y)
+{
+	return x + y;
+};
+
 int main()
 {
-	#pragma region Тесты с сеткой
-	//mesh_generator mg;
-	//std::vector<node> mesh;
-	//mg.build_mesh(mesh, mesh_generator::grid_type::UNIFORM);
+	#pragma region РўРµСЃС‚С‹ СЃ СЃРµС‚РєРѕР№
+	mesh_generator mg;
+	mesh mesh;
+
+	mg.build_mesh(mesh, mesh::mesh_type::UNIFORM);
+	mesh.save(directory);
 	#pragma endregion
 
-	#pragma region Тесты с матрицей
+	#pragma region РўРµСЃС‚С‹ СЃ РјР°С‚СЂРёС†РµР№
 	//diagonal_matrix dm(21, 7, 1);
 
 	//for (uint32_t i = 0; i < dm.diags.size(); i++)
@@ -37,7 +50,7 @@ int main()
 
 	#pragma endregion
 
-	#pragma region Тесты с решателем
+	#pragma region РўРµСЃС‚С‹ СЃ СЂРµС€Р°С‚РµР»РµРј
 	//solver slv(10000, 1e-13);
 
 	//for (double w = 0; w < 2; w += 0.1)
@@ -56,9 +69,10 @@ int main()
 
 	#pragma endregion
 
-	#pragma region Тесты с классом fdm
-	//fdm fdm;
-	//fdm.mesh_to_slae(mesh);
+	#pragma region РўРµСЃС‚С‹ СЃ РєР»Р°СЃСЃРѕРј fdm
+	fdm fdm;
+	fdm.mesh_to_slae(mesh, u, f);
+	fdm.calculate();
 
 	#pragma endregion
 

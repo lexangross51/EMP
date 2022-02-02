@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 #ifndef DIAGONAL_MATRIX_H
 #define DIAGONAL_MATRIX_H
 
@@ -19,17 +19,15 @@ public:
 
 	double dot(const uint32_t row, const std::vector<double>& vector);
 
-	void to_dense(std::string file_to_save);
-
-
+	void to_dense(std::string dir);
 
 public:
-	uint32_t dim;								// Размер матрицы
-	uint32_t zero_diags;						// Кол-во нулевых диагоналей
-	std::vector<std::vector<double>> diags;		// Диагонали
-	std::vector<int> offset;					// Смещения побочных диагоналей
-												// относительно главной
-	std::vector<std::vector<double>> matrix;	// Матрица в плотном формате
+	uint32_t dim;								// Р Р°Р·РјРµСЂ РјР°С‚СЂРёС†С‹
+	uint32_t zero_diags;						// РљРѕР»-РІРѕ РЅСѓР»РµРІС‹С… РґРёР°РіРѕРЅР°Р»РµР№
+	std::vector<std::vector<double>> diags;		// Р”РёР°РіРѕРЅР°Р»Рё
+	std::vector<int> offset;					// РЎРјРµС‰РµРЅРёСЏ РїРѕР±РѕС‡РЅС‹С… РґРёР°РіРѕРЅР°Р»РµР№
+												// РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РіР»Р°РІРЅРѕР№
+	std::vector<std::vector<double>> matrix;	// РњР°С‚СЂРёС†Р° РІ РїР»РѕС‚РЅРѕРј С„РѕСЂРјР°С‚Рµ
 
 	void make_dom();
 };
