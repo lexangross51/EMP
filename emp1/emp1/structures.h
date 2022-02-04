@@ -8,7 +8,8 @@
 
 const std::string directory = "C:\\Users\\lexan\\OneDrive\\Рабочий стол\\НГТУ\\6 семестр\\Уравнения математической физики\\emp1\\emp1\\";
 
-typedef std::function<double(double, double)> function2D;
+typedef std::function<double(double, double, double)> function2D;
+typedef std::function<double(double, double)> func2D;
 
 struct point
 {
@@ -26,10 +27,8 @@ struct border
 	{
 		NONE,
 		DIRICHLET,
-		P_NEUMANN = 2,
-		M_NEUMANN = -2,
-		P_NEWTON = 3,
-		M_NEWTON = -3,
+		NEUMANN,
+		NEWTON
 	};
 
 	point limits[2];

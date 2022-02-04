@@ -15,19 +15,17 @@ void mesh::save(const std::string dir)
 	{
 		for (const auto& it : nodes)
 		{
-			if (it.type == node::node_type::INTERNAL)
+			if (it.type == 0)
 				i << it.p.x << " " << it.p.y << std::endl;
-			else if (it.type == node::node_type::BORDER)
+			else if (it.type == 1 || it.type == 2 || it.type == 3 || it.type == 4)
 			{
 				b << it.p.x << " " << it.p.y << std::endl;
 
 				if (it.bc == border::bound_cond::DIRICHLET)
 					fi << it.p.x << " " << it.p.y << std::endl;
-				else if (it.bc == border::bound_cond::P_NEUMANN || 
-						 it.bc == border::bound_cond::M_NEUMANN)
+				else if (it.bc == border::bound_cond::NEUMANN)
 					se << it.p.x << " " << it.p.y << std::endl;
-				else if (it.bc == border::bound_cond::P_NEWTON || 
-						 it.bc == border::bound_cond::M_NEWTON)
+				else if (it.bc == border::bound_cond::NEWTON)
 					th << it.p.x << " " << it.p.y << std::endl;
 			}
 			else

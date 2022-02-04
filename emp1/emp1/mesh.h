@@ -9,26 +9,21 @@
 // позиции в массивах X и Y, 
 // тип (внутренний, граничный, фиктивный)
 // тип краевого
-// коэффициенты лямбда и бета
+// коэффициенты лямбда и гамма
 struct node
 {
-	enum class node_type
-	{
-		INTERNAL,
-		BORDER,
-		FICTITIOUS
-	};
-
 	point p;
 	uint32_t x_pos, y_pos;
-	node_type type;
+	int type;				// -1 - фиктивный
+							// 0 - внутренний
+							// 1,2,3,4 - граничный
 	border::bound_cond bc;
 	double lambda;
 	double gamma;
 
 	node(
 		point& _p, uint32_t i, uint32_t j,
-		node_type _type = node_type::FICTITIOUS,
+		int _type = -1,
 		border::bound_cond _bc = border::bound_cond::NONE,
 		double _lambda = 0.0, double _gamma = 0.0) :
 		p(_p), x_pos(i), y_pos(j), type(_type), bc(_bc), lambda(_lambda), gamma(_gamma) {};

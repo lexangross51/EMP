@@ -36,7 +36,7 @@ private:
 
 	void generate_xy(const mesh::mesh_type type);
 
-	node::node_type what_type(const point &p, const uint32_t i, const uint32_t j);
+	int what_type(const point &p, const uint32_t i, const uint32_t j);
 
 	uint32_t what_border(const point& p, const uint32_t area_num);
 

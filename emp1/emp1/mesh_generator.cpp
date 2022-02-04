@@ -47,7 +47,7 @@ void mesh_generator::input(const std::string dir)
 		{
 			uint32_t startx, endx, starty, endy;
 			double lambda, gamma;
-			int bc1, bc2, bc3, bc4;
+			uint16_t bc1, bc2, bc3, bc4;
 
 			file >> startx >> endx >> starty >> endy
 				 >> lambda >> gamma
@@ -136,7 +136,7 @@ void mesh_generator::generate_xy(const mesh::mesh_type type)
 			if (kr[0][i] != 1.0)
 				dx = (X_lines[i + 1] - X_lines[i]) * (1 - kr[0][i]) / (1 - pow(kr[0][i], part[0][i]));
 			else
-				dx = (X_lines[nx - 1] - X_lines[0]) / part[0][0];
+				dx = (X_lines[i + 1] - X_lines[i]) / part[0][i];
 			
 			coord = X_lines[i];
 			
@@ -146,14 +146,15 @@ void mesh_generator::generate_xy(const mesh::mesh_type type)
 				dx *= kr[0][i];
 			}
 		}
-		X.push_back(X_lines[nx - 1]);
+		//if (abs(X[X.size() - 1] - X_lines[nx - 1]) > 1e-14)
+			X.push_back(X_lines[nx - 1]);
 
-		for (uint32_t i = 0; i < part[1].size(); i++)
+		for (uint32_t i = 0; i < ny - 1; i++)
 		{
 			if (kr[1][i] != 1.0)
 				dy = (Y_lines[i + 1] - Y_lines[i]) * (1 - kr[1][i]) / (1 - pow(kr[1][i], part[1][i]));
 			else
-				dy = (Y_lines[ny - 1] - Y_lines[0]) / part[1][0];
+				dy = (Y_lines[i + 1] - Y_lines[i]) / part[1][i];
 
 			coord = Y_lines[i];
 
@@ -163,7 +164,8 @@ void mesh_generator::generate_xy(const mesh::mesh_type type)
 				dy *= kr[1][i];
 			}
 		}
-		Y.push_back(Y_lines[ny - 1]);
+		//if (abs(Y[Y.size() - 1] - Y_lines[ny - 1]) > 1e-14)
+			Y.push_back(Y_lines[ny - 1]);
 	}
 
 	X_lines.clear();
@@ -186,26 +188,26 @@ void mesh_generator::build_mesh(mesh& mesh, mesh::mesh_type type)
 		for (uint32_t j = 0; j < X.size(); j++)
 		{
 			point p(X[j], Y[i]);
-			auto node_type = what_type(p, j, i);
+			int node_type = what_type(p, j, i);
 
-			if (node_type != node::node_type::FICTITIOUS)
+			if (node_type != -1)
 			{
 				uint32_t area_num;
 				is_in_area(p, area_num);
 
-				if (node_type == node::node_type::INTERNAL)
+				if (node_type == 0)
 					mesh.add_node(node(p, j, i, node_type,
 						border::bound_cond::NONE,
 						areas[area_num].lambda,
 						areas[area_num].gamma));
 				else
 					mesh.add_node(node(p, j, i, node_type,
-						areas[area_num].borders[what_border(p, area_num)].bc,
+						areas[area_num].borders[what_border(p, area_num) - 1].bc,
 						areas[area_num].lambda,
 						areas[area_num].gamma));
 			}
 			else
-				mesh.add_node(node(p, 0, 0, node_type));
+				mesh.add_node(node(p, j, i, node_type));
 		}
 
 	X.clear();
@@ -216,23 +218,23 @@ void mesh_generator::build_mesh(mesh& mesh, mesh::mesh_type type)
 }
 
 // Определяем тип узла: внутренний, граничный или фиктивный
-node::node_type mesh_generator::what_type(const point& p, const uint32_t i, const uint32_t j)
+int mesh_generator::what_type(const point& p, const uint32_t i, const uint32_t j)
 {
 	uint32_t cnt = 0;
 
 	uint32_t neighbor_cnt = 0;
 
+	uint32_t c;
+
 	// Проверим сначала, не является ли узел фиктивным
 	for (const auto& it : areas)
-	{
-		if (!(p.x >= it.borders[0].limits[0].x && p.x <= it.borders[0].limits[1].x &&
-			p.y >= it.borders[1].limits[0].y && p.y <= it.borders[1].limits[1].y))
+		if (!is_in_area(p, c))
 			cnt++;
-	}
+
 	// Если число областей, которым не принадлжит точка, равно общему числу областей
 	// то узле - фиктивный
 	if (cnt == areas.size())
-		return node::node_type::FICTITIOUS;
+		return -1;
 
 	// Определим сколько соседей есть у точки
 	// Возьмем узлы слева, справа, снизу и сверху от текущего
@@ -246,9 +248,11 @@ node::node_type mesh_generator::what_type(const point& p, const uint32_t i, cons
 	// вышли за пределы массивов X или Y, то узел был граничным
 	if (x_prev < 0 || x_next > X.size() - 1 ||
 		y_prev < 0 || y_next > Y.size() - 1)
-		return node::node_type::BORDER;
+	{
+		is_in_area(p, c);
+		return what_border(p, c);
+	}
 
-	uint32_t c;
 	if (is_in_area(point(X[x_prev], Y[j]), c))
 		neighbor_cnt++;
 	if (is_in_area(point(X[x_next], Y[j]), c))
@@ -260,10 +264,13 @@ node::node_type mesh_generator::what_type(const point& p, const uint32_t i, cons
 
 	// Если у узла 4 соседа, то он внутренний
 	if (neighbor_cnt == 4)
-		return node::node_type::INTERNAL;
+		return 0;
 	// Иначе граничный
 	else
-		return node::node_type::BORDER;
+	{
+		is_in_area(p, c);
+		return what_border(p, c);
+	}
 }
 
 // Возвращает номер границы, которой принадлежит точка
@@ -277,7 +284,7 @@ uint32_t mesh_generator::what_border(const point& p, const uint32_t area_num)
 			p.y == areas[area_num].borders[i].limits[0].y &&
 			p.x >= areas[area_num].borders[i].limits[0].x &&
 			p.x <= areas[area_num].borders[i].limits[1].x)
-			return i;
+			return (i + 1);
 	}
 }
 
