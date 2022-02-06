@@ -139,12 +139,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="area.h" />
     <ClInclude Include="diagonal_matrix.h" />
     <ClInclude Include="fdm.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="mesh_generator.h" />
-    <ClInclude Include="structures.h" />
+    <ClInclude Include="head.h" />
     <ClInclude Include="solver.h" />
+    <ClInclude Include="testing_module.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="diagonal_matrix.cpp" />
@@ -153,6 +155,7 @@
     <ClCompile Include="mesh.cpp" />
     <ClCompile Include="mesh_generator.cpp" />
     <ClCompile Include="solver.cpp" />
+    <ClCompile Include="testing_module.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="areas.txt" />
@@ -161,8 +164,12 @@
     <Text Include="fictitious.txt" />
     <Text Include="first.txt" />
     <Text Include="internal.txt" />
-    <Text Include="result.txt" />
     <Text Include="second.txt" />
+    <Text Include="tests\test_1.txt" />
+    <Text Include="tests\test_2.txt" />
+    <Text Include="tests\test_3.txt" />
+    <Text Include="tests\test_4.txt" />
+    <Text Include="tests\test_5.txt" />
     <Text Include="third.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

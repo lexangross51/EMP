@@ -16,12 +16,15 @@
     <Filter Include="Текстовые файлы">
       <UniqueIdentifier>{286b8e28-c69d-4fb6-a6d4-daf3b235806c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Результаты тестов">
+      <UniqueIdentifier>{70f62b99-d7bd-454b-b2eb-b5408a2fee96}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mesh_generator.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="structures.h">
+    <ClInclude Include="head.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="solver.h">
@@ -34,6 +37,12 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="mesh.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="testing_module.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="area.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
@@ -54,6 +63,9 @@
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="mesh.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="testing_module.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -82,8 +94,20 @@
     <Text Include="third.txt">
       <Filter>Текстовые файлы</Filter>
     </Text>
-    <Text Include="result.txt">
-      <Filter>Текстовые файлы</Filter>
+    <Text Include="tests\test_1.txt">
+      <Filter>Результаты тестов</Filter>
+    </Text>
+    <Text Include="tests\test_2.txt">
+      <Filter>Результаты тестов</Filter>
+    </Text>
+    <Text Include="tests\test_3.txt">
+      <Filter>Результаты тестов</Filter>
+    </Text>
+    <Text Include="tests\test_4.txt">
+      <Filter>Результаты тестов</Filter>
+    </Text>
+    <Text Include="tests\test_5.txt">
+      <Filter>Результаты тестов</Filter>
     </Text>
   </ItemGroup>
 </Project>

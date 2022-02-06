@@ -15,28 +15,19 @@ void solver::set_initial_approx(std::vector<double>& vector, const uint32_t size
 	vector.resize(size, 1);
 }
 
-// Метод Гаусса - Зейделя
-void solver::Gauss_Seidel(	const double w,
-							diagonal_matrix& A,
-							const std::vector<double>& b,
-							std::vector<double>& result)
-{
-	for (uint32_t i = 0; i < result.size(); i++)
-		result[i] += w * (b[i] - A.dot(i, result)) / A.get_diag_elem(0, i);
-}
-
 // Решить систему
-std::pair<uint32_t, double> solver::solve(	const double w,
-											diagonal_matrix& A,
-											const std::vector<double>& b,
-											std::vector<double>& result)
+std::pair<uint32_t, double> solver::solve(double w,
+	diagonal_matrix& A,
+	std::vector<double>& b,
+	std::vector<double>& result)
 {
 	set_initial_approx(result, A.get_size());
 
 	norm_b = norm(b);
 
 	uint32_t iters = 0;
-	do 
+
+	do
 	{
 		iters++;
 		Gauss_Seidel(w, A, b, result);
@@ -44,6 +35,16 @@ std::pair<uint32_t, double> solver::solve(	const double w,
 	} while (iters < max_iter && residual(A, b, result) >= eps);
 
 	return std::make_pair(iters, residual(A, b, result));
+}
+
+// Метод Гаусса - Зейделя
+void solver::Gauss_Seidel(	double w,
+							diagonal_matrix& A,
+							std::vector<double>& b,
+							std::vector<double>& result)
+{
+	for (uint32_t i = 0; i < result.size(); i++)
+		result[i] += w * (b[i] - A.dot(i, result)) / A.diagonal(0, i);
 }
 
 // Посчитать норму вектора

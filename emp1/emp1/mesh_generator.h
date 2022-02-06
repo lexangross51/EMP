@@ -2,8 +2,9 @@
 #ifndef MESH_GENERATOR_H
 #define MESH_GENERATOR_H
 
-#include "structures.h"
+#include "head.h"
 #include "mesh.h"
+#include "area.h"
 
 class mesh_generator
 {
@@ -40,7 +41,7 @@ private:
 
 	uint32_t what_border(const point& p, const uint32_t area_num);
 
-	bool is_in_area(const point& p, uint32_t &area_num);
+	bool is_in_area(const point& p, uint32_t& area_num);
 };
 
 #endif

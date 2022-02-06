@@ -1,11 +1,12 @@
 ﻿#include "fdm.h"
 
+const double RELAXATION_PARAMETER = 1.26;
+
 // Преобразовываем сетку в СЛАУ
-void fdm::mesh_to_slae(mesh& mesh, func2D u, function2D f)
+void fdm::mesh_to_slae(mesh& mesh, func2D_u& u, func2D_f& f)
 {
 	A = new diagonal_matrix(mesh.dim(), 5, mesh.get_width() - 1);
 	b.resize(mesh.dim());
-	q.resize(mesh.dim());
 
 	// Количество элементов по оси X
 	uint32_t kx = mesh.get_width() + 1;
@@ -23,13 +24,13 @@ void fdm::mesh_to_slae(mesh& mesh, func2D u, function2D f)
 			double hy = mesh[i + kx].p.y - node.p.y;
 			double hy_prev = node.p.y - mesh[i - kx].p.y;
 
-			A->diags[0][i]		= +2.0 / (hx_prev * hx) + 2.0 / (hy_prev * hy) + node.gamma;
+			A->diags[0][i]		= (+ 2.0 / (hx_prev * hx) + 2.0 / (hy_prev * hy)) * node.lambda + node.gamma;
 			A->diags[1][i - 1]	= -2.0 * node.lambda / (hx_prev * (hx + hx_prev));
 			A->diags[3][i]		= -2.0 * node.lambda / (hx * (hx + hx_prev));
 			A->diags[2][i - kx]	= -2.0 * node.lambda / (hy_prev * (hy + hy_prev));
 			A->diags[4][i]		= -2.0 * node.lambda / (hy * (hy + hy_prev));
 
-			b[i] = f(node.p.x, node.p.y, node.gamma);
+			b[i] = f(node.p.x, node.p.y, node.lambda, node.gamma);
 		}
 
 		// Фиктивный узел
@@ -132,54 +133,28 @@ void fdm::mesh_to_slae(mesh& mesh, func2D u, function2D f)
 			}
 		}
 	}
-
-	A->to_dense(directory);
 }
 
-// Решить систему и вывести результат
-void fdm::calculate()
+// Решить систему и вернуть результат
+std::pair<uint32_t, double> fdm::calculate(std::vector<double>& q)
 {
-	solver slv(100000, 1e-10);
+	q.resize(b.size());
 
-	for (double w = 0; w < 2; w += 0.1)
-	{
-		auto result = slv.solve(w, *A, b, q);
+	solver slv(100000, 1e-14);
 
-		write(directory, w, result);
-	}
+	return slv.solve(RELAXATION_PARAMETER, *A, b, q);
 }
 
 // 1-я производная по x
-double fdm::du_dx(func2D& f, point& p)
+double fdm::du_dx(func2D_u& f, point& p)
 {
 	double h = 1e-5;
 	return (f(p.x + h, p.y) - f(p.x, p.y)) / h;
 }
 
 // 1-я производная по y
-double fdm::du_dy(func2D& f, point& p)
+double fdm::du_dy(func2D_u& f, point& p)
 {
 	double h = 1e-5;
 	return (f(p.x, p.y + h) - f(p.x, p.y)) / h;
-}
-
-// Вывести результат в файл
-void fdm::write(const std::string dir, const double w, const std::pair<uint32_t, double> result)
-{
-	std::ofstream res(dir + "result.txt", std::ios::app);
-	
-	if (res.is_open())
-	{
-		res << std::left
-			<< std::setw(12) << "w: " << w << std::endl
-			<< std::setw(12) << "iterations: " << result.first << std::endl
-			<< std::setw(12) << "residual: " << result.second << std::endl;
-
-		for (const auto& it : q)
-			res << it << std::endl;
-
-		res << std::endl << std::endl;
-	}
-	else
-		std::cerr << "Can't open file" << std::endl;
 }

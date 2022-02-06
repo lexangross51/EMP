@@ -13,9 +13,9 @@ public:
 	void set_parameters(const uint32_t _max_iter, 
 						const double _eps);
 
-	std::pair<uint32_t, double> solve(	const double w, 
+	std::pair<uint32_t, double> solve(	double w, 
 										diagonal_matrix& A, 
-										const std::vector<double>& b, 
+										std::vector<double>& b, 
 										std::vector<double>& result	);
 
 private:
@@ -27,16 +27,14 @@ private:
 							// раз в начале, чтобы не пересчитывать каждый
 							// раз, когда нужно будет посчитать невящку)
 
-	void Gauss_Seidel(	const double w, 
+	void Gauss_Seidel(	double w, 
 						diagonal_matrix& A, 
-						const std::vector<double>& b, 
+						std::vector<double>& b, 
 						std::vector<double>& result);
 
 	void set_initial_approx(std::vector<double>& vector, const uint32_t size);
 
-	double residual(diagonal_matrix& A, 
-					const std::vector<double>& b, 
-					std::vector<double>& result);
+	double residual(diagonal_matrix& A, const std::vector<double>& b, std::vector<double>& result);
 
 	double norm(const std::vector<double>& vector);
 };

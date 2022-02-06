@@ -146,7 +146,7 @@ void mesh_generator::generate_xy(const mesh::mesh_type type)
 				dx *= kr[0][i];
 			}
 		}
-		//if (abs(X[X.size() - 1] - X_lines[nx - 1]) > 1e-14)
+		if (abs(X[X.size() - 1] - X_lines[nx - 1]) > 1e-14)
 			X.push_back(X_lines[nx - 1]);
 
 		for (uint32_t i = 0; i < ny - 1; i++)
@@ -164,7 +164,7 @@ void mesh_generator::generate_xy(const mesh::mesh_type type)
 				dy *= kr[1][i];
 			}
 		}
-		//if (abs(Y[Y.size() - 1] - Y_lines[ny - 1]) > 1e-14)
+		if (abs(Y[Y.size() - 1] - Y_lines[ny - 1]) > 1e-14)
 			Y.push_back(Y_lines[ny - 1]);
 	}
 
@@ -214,7 +214,7 @@ void mesh_generator::build_mesh(mesh& mesh, mesh::mesh_type type)
 	Y.clear();
 	areas.clear();
 
-	mesh.save(directory);
+	mesh.save();
 }
 
 // Определяем тип узла: внутренний, граничный или фиктивный
@@ -290,7 +290,7 @@ uint32_t mesh_generator::what_border(const point& p, const uint32_t area_num)
 
 // Проверяет, находится ли точка в области и возвращает номер области, 
 // если точка принадлежит ей
-bool mesh_generator::is_in_area(const point& p, uint32_t &area_num)
+bool mesh_generator::is_in_area(const point& p, uint32_t& area_num)
 {
 	for (uint32_t i = 0; i < areas.size(); i++)
 	{

@@ -2,7 +2,7 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include "structures.h"
+#include "area.h"
 
 // Узел сетки: 
 // координаты, 
@@ -40,11 +40,11 @@ public:
 
 	mesh() : width(0), height(0), type(mesh_type::UNIFORM) {}
 
-	void add_node(const node& node) { nodes.push_back(node); }
+	inline void add_node(const node& node) { nodes.push_back(node); }
 
-	void set_width(const uint32_t _width) { width = _width; }
-	void set_height(const uint32_t _height) { height = _height; }
-	void set_type(const mesh_type _type) { type = _type; }
+	inline void set_width(const uint32_t _width) { width = _width; }
+	inline void set_height(const uint32_t _height) { height = _height; }
+	inline void set_type(const mesh_type _type) { type = _type; }
 
 	inline uint32_t get_width(void) const { return width; }
 	inline uint32_t get_height(void) const { return height; }
@@ -54,7 +54,9 @@ public:
 
 	node& operator[] (const uint32_t index) { return nodes[index]; }
 
-	void save(const std::string dir);
+	void save(const std::string dir = directory);
+
+	inline void clear() { nodes.clear(); }
 
 private:
 	uint32_t width;				// Ширина сетки
