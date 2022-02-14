@@ -11,22 +11,22 @@ const std::string tests_directory = "C:\\Users\\lexan\\OneDrive\\Рабочий стол\\Н
 class testing_module
 {
 public:
-	void set_functions();
+    void set_functions();
 
-	void run_tests();
+    void run_tests();
 
 private:
-	std::vector<std::pair<func2D_u, func2D_f>> functions;
+    std::vector<std::pair<func2D_u, func2D_f>> functions;
 
-	std::vector<double> exact;
+    std::vector<double> exact;
 
-	void calc_exact(const func2D_u& u, mesh& mesh);
+    void calc_exact(const func2D_u& u, mesh& mesh);
 
-	double error(const std::vector<double>& q);
+    double error(const std::vector<double>& q);
 
-	void save(uint32_t test_num,
-		std::pair<uint32_t, double>& result,
-		const std::vector<double>& q);
+    void save(uint32_t test_num,
+        std::pair<uint32_t, double>& result,
+        const std::vector<double>& u);
 };
 
 #endif

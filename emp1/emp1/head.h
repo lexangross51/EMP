@@ -14,9 +14,9 @@ typedef std::function<double(double, double, double, double)> func2D_f;
 
 struct point
 {
-	double x;
-	double y;
+    double x;
+    double y;
 
-	point(double _x = 0.0, double _y = 0.0) :
-		x(_x), y(_y) {};
+    point(double _x = 0.0, double _y = 0.0) :
+        x(_x), y(_y) {};
 };
