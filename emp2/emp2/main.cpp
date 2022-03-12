@@ -2,9 +2,9 @@
 
 int main()
 {
-	testing_module test;
+    testing_module test;
 
-	test.run();
+    test.run();
 
-	return 0;
+    return 0;
 }

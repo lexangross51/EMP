@@ -1,23 +1,23 @@
-#include "matrix.h"
+п»ї#include "matrix.h"
 
 matrix::matrix(const uint32_t _size, const uint32_t _tape_width)
 {
-	size = _size;
-	tape_width = _tape_width;
+    size = _size;
+    tape_width = _tape_width;
 
-	uint32_t k = (tape_width - 1) / 2;
+    uint32_t k = (tape_width - 1) / 2;
 
-	tape.resize(tape_width);
+    tape.resize(tape_width);
 
-	tape[0].resize(size);
-	for (uint32_t i = 1; i < k + 1; i++)
-	{
-		tape[i].resize(size - i);
-		tape[k + i].resize(size - i);
-	}
+    tape[0].resize(size);
+    for (uint32_t i = 1; i < k + 1; i++)
+    {
+        tape[i].resize(size - i);
+        tape[k + i].resize(size - i);
+    }
 }
 
-// Умножить матрицу на вектор
+// РЈРјРЅРѕР¶РёС‚СЊ РјР°С‚СЂРёС†Сѓ РЅР° РІРµРєС‚РѕСЂ
 std::unique_ptr<std::vector<double>> matrix::dot(const std::vector<double>& vector)
 {
     auto res = std::make_unique<std::vector<double>>(vector.size());
@@ -40,7 +40,7 @@ std::unique_ptr<std::vector<double>> matrix::dot(const std::vector<double>& vect
     return res;
 }
 
-// Перевести матрицу в плотный формат
+// РџРµСЂРµРІРµСЃС‚Рё РјР°С‚СЂРёС†Сѓ РІ РїР»РѕС‚РЅС‹Р№ С„РѕСЂРјР°С‚
 void matrix::to_dense(const std::string dir)
 {
     uint32_t k = (tape_width - 1) / 2;
@@ -88,7 +88,7 @@ void matrix::to_dense(const std::string dir)
     mat.clear();
 }
 
-// Обнулить все элементы
+// РћР±РЅСѓР»РёС‚СЊ РІСЃРµ СЌР»РµРјРµРЅС‚С‹
 void matrix::set_elem_to_null()
 {
     for (uint32_t i = 0; i < tape_width; i++)

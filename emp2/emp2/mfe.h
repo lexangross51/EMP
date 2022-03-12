@@ -1,68 +1,54 @@
-#pragma once
-#ifndef MFE_H
-#define MFE_H
+п»ї#pragma once
+#ifndef MESH_H
+#define MESH_H
 
-#include "mesh.h"
-#include "matrix.h"
-#include "solver.h"
+#include "head.h"
 
-class mfe
+// РљРѕРЅРµС‡РЅС‹Р№ СЌР»РµРјРµРЅС‚
+struct finite_elem
 {
-	friend class solver;
+    uint32_t number;
 
-public:
-	enum class method
-	{
-		SIMPLE_ITERATION,
-		NEWTON
-	};
+    double x;
+    double x_next;
 
-	mfe(mesh& mesh);
+    double sigma;
 
-	void set_functions(const function& _u, const function_f& _f, const function_lambda& _lambda);
-
-	void assembly_global_slae(mesh& mesh, const double t, const double delta_t);
-
-	void initial_condition(mesh& mesh);
-	void first_boundary_condition(mesh& mesh, const double t, const double delta_t);
-
-	std::pair<uint32_t, double> solve(mesh& mesh, uint32_t max_iter, double eps, method method);
-
-private:
-	std::vector<std::vector<double>> local_A;	// Локальная матрица
-	std::vector<double> local_f;				// Локальный вектор
-	
-	matrix* global_A;				// Глобальная матрица
-	std::vector<double> global_f;	// Глобальный вектор
-
-	matrix* A;						// Глобальная матрица дла расчета невязки, если 
-									// используем метод Ньютона
-	std::vector<double> nl_f;
-
-	std::vector<double> q;			// Вектор весов на текущем временном слое
-	std::vector<double> q_prev;		// Вектор весов на предыдущем временном слое
-
-	std::vector<double> exact;		// Точное значение
-
-	function u;				// Неизвестная функция
-	function_f f;			// Функция правой части
-	function_lambda lambda;	// Функция lambda(du/dx)
-
-	method method_to_solve;
-
-	double dlambda(double q2, double q1, double h, double x, uint32_t var);
-
-	void build_local_matrix(const finite_elem& elem, const double delta_t);
-	void build_local_vector(const finite_elem& elem, const double t, const double delta_t);
-
-	void add_relax(const double w);
-
-	double residual();
-	double error(mesh& mesh);
-
-	void save(std::string dir, std::pair<uint32_t, double>& res);
-
-	void linearization_newton(const finite_elem& elem, const double delta_t);
+    finite_elem(uint32_t _number, double _x, double _x_next, double _sigma) :
+        number(_number), x(_x), x_next(_x_next), sigma(_sigma) {};
 };
 
-#endif 
+// РЎРµС‚РєР°
+class mesh
+{
+public:
+    enum class mesh_type
+    {
+        UNIFORM,
+        NONUNIFORM
+    };
+
+public:
+    inline void add_elem(const finite_elem& elem) { elems.push_back(elem); }
+    inline finite_elem& operator[] (const uint32_t ielem) { return elems[ielem]; }
+
+    inline void set_time(const std::vector<double>& _time) { T = _time; };
+    inline double get_time(const uint32_t moment) { return T[moment]; }
+
+    inline uint32_t get_fe_count(void) { return elems.size(); }
+    inline uint32_t get_time_size(void) { return T.size(); }
+
+    inline mesh_type get_area_type(void) { return area_type; }
+    inline mesh_type get_time_type(void) { return time_type; }
+
+    void save(const std::string dir = directory);
+
+private:
+    std::vector<finite_elem> elems;				// РљРѕРЅС‡РµРЅС‹Рµ СЌР»РµРјРµРЅС‚С‹
+    std::vector<double> T;						// РњРѕРјРµРЅС‚С‹ РІСЂРµРјРµРЅРё
+
+    mesh_type area_type = mesh_type::UNIFORM;	// РўРёРї СЃРµС‚РєРё РїРѕ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІСѓ
+    mesh_type time_type = mesh_type::UNIFORM;	// РўРёРї СЃРµС‚РєРё РїРѕ РІСЂРµРјРµРЅРё
+};
+
+#endif

@@ -1,27 +1,27 @@
-#include "mesh.h"
+ï»¿#include "mesh.h"
 
 void mesh::save(const std::string dir)
 {
-	//--------------- ÊÎÍÅ×ÍÛÅ İËÅÌÅÍÒÛ ----------------------------
-	std::ofstream fe(dir + "fe.txt");
+    //--------------- ĞšĞĞĞ•Ğ§ĞĞ«Ğ• Ğ­Ğ›Ğ•ĞœĞ•ĞĞ¢Ğ« ----------------------------
+    std::ofstream fe(dir + "fe.txt");
 
-	if (fe.is_open())
-	{
-		fe << elems[0].x << std::endl;
-		for (uint32_t i = 0; i < elems.size(); i++)
-			fe << elems[i].x_next << std::endl;
+    if (fe.is_open())
+    {
+        fe << elems[0].x << std::endl;
+        for (uint32_t i = 0; i < elems.size(); i++)
+            fe << elems[i].x_next << std::endl;
 
-		fe.close();
-	}
+        fe.close();
+    }
 
-	//--------------------- ÂĞÅÌß ----------------------------------
-	std::ofstream time(dir + "time.txt");
+    //--------------------- Ğ’Ğ Ğ•ĞœĞ¯ ----------------------------------
+    std::ofstream time(dir + "time.txt");
 
-	if (time.is_open())
-	{
-		for (uint32_t i = 0; i < T.size(); i++)
-			time << T[i] << std::endl;
+    if (time.is_open())
+    {
+        for (uint32_t i = 0; i < T.size(); i++)
+            time << T[i] << std::endl;
 
-		time.close();
-	}
+        time.close();
+    }
 }

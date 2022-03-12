@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #ifndef SOLVER_H
 #define SOLVER_H
 
@@ -8,16 +8,14 @@
 class solver
 {
 public:
-	void newton();
+    void LU(matrix& A);
 
-	void LU(matrix& A);
-
-	void solve_by_LU(matrix A, std::vector<double>& f, std::vector<double>& q);
+    void solve_by_LU(matrix A, std::vector<double>& f, std::vector<double>& q);
 
 
 private:
-	uint32_t max_iter;
-	double eps;
+    uint32_t max_iter;
+    double eps;
 };
 
 #endif
