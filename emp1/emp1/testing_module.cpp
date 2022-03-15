@@ -55,7 +55,7 @@ void testing_module::run_tests()
 
         fdm.mesh_to_slae(mesh, functions[test].first, functions[test].second);
 
-        auto result = fdm.calculate(mesh, u);
+        auto result = fdm.calculate(u);
 
         save(test + 1, result, u);
     }
@@ -69,7 +69,7 @@ void testing_module::save(	uint32_t test_num,
                             const std::vector<double>& u)
 {
     std::ofstream out(tests_directory + "test_" + std::to_string(test_num) + ".txt");
-
+    
     out << std::left
         << std::setw(16) << "iterations: " << result.first << std::endl
         << std::setw(16) << "residual: " << result.second << std::endl

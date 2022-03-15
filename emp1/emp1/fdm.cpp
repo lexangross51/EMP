@@ -25,7 +25,7 @@ void fdm::mesh_to_slae(mesh& mesh, func2D_u& u, func2D_f& f)
 
                 double hy = mesh[i + kx].p.y - node.p.y;
 
-                A->diags[0][i]		= (+2.0 / (hx * hx) + 2.0 / (hy * hy)) * node.lambda + node.gamma;
+                A->diags[0][i]		= (2.0 / (hx * hx) + 2.0 / (hy * hy)) * node.lambda + node.gamma;
                 A->diags[1][i - 1]	= -node.lambda / (hx * hx);
                 A->diags[3][i]		= -node.lambda / (hx * hx);
                 A->diags[2][i - kx] = -node.lambda / (hy * hy);
@@ -66,7 +66,7 @@ void fdm::mesh_to_slae(mesh& mesh, func2D_u& u, func2D_f& f)
             case border::bound_cond::DIRICHLET:
             {
                 A->diags[0][i] = 1.0;
-                b[i] = u(mesh[i].p.x, mesh[i].p.y);
+                b[i] = u(node.p.x, node.p.y);
                 break;
             }
 
@@ -79,28 +79,28 @@ void fdm::mesh_to_slae(mesh& mesh, func2D_u& u, func2D_f& f)
                     hx = mesh[i + 1].p.x - node.p.x;
                     A->diags[0][i] = 1.0 / hx * node.lambda;
                     A->diags[3][i] = -1.0 / hx * node.lambda;
-                    b[i] = -node.lambda * du_dx(u, node.p);
+                    b[i] = -node.lambda * du_dx(u, node.p, hx);
                 }
                 else if (node.type == 4)
                 {
                     hx = node.p.x - mesh[i - 1].p.x;
                     A->diags[0][i] = 1.0 / hx * node.lambda;
                     A->diags[1][i - 1] = -1.0 / hx * node.lambda;
-                    b[i] = node.lambda * du_dx(u, node.p);
+                    b[i] = node.lambda * du_dx(u, node.p, hx);
                 }
                 else if (node.type == 1)
                 {
                     hy = mesh[i + kx].p.y - node.p.y;
                     A->diags[0][i] = 1.0 / hy * node.lambda;
                     A->diags[4][i] = -1.0 / hy * node.lambda;
-                    b[i] = -node.lambda * du_dy(u, node.p);
+                    b[i] = -node.lambda * du_dy(u, node.p, hy);
                 }
                 else if (node.type == 3)
                 {
                     hy = node.p.y - mesh[i - kx].p.y;
                     A->diags[0][i] = 1.0 / hy * node.lambda;
                     A->diags[2][i - kx] = -1.0 / hy * node.lambda;
-                    b[i] = node.lambda * du_dy(u, node.p);
+                    b[i] = node.lambda * du_dy(u, node.p, hy);
                 }
                 break;
             }
@@ -114,28 +114,28 @@ void fdm::mesh_to_slae(mesh& mesh, func2D_u& u, func2D_f& f)
                     hx = mesh[i + 1].p.x - node.p.x;
                     A->diags[0][i] = 1.0 / hx * node.lambda + beta;
                     A->diags[3][i] = -1.0 / hx * node.lambda;
-                    b[i] = -node.lambda * du_dx(u, node.p) + beta * (u(node.p.x, node.p.y) - u_beta);
+                    b[i] = -node.lambda * du_dx(u, node.p, hx) + beta * (u(node.p.x, node.p.y) - u_beta);
                 }
                 else if (node.type == 4)
                 {
                     hx = node.p.x - mesh[i - 1].p.x;
                     A->diags[0][i] = 1.0 / hx * node.lambda + beta;
                     A->diags[1][i - 1] = -1.0 / hx * node.lambda;
-                    b[i] = node.lambda * du_dx(u, node.p) + beta * (u(node.p.x, node.p.y) - u_beta);
+                    b[i] = node.lambda * du_dx(u, node.p, hx) + beta * (u(node.p.x, node.p.y) - u_beta);
                 }
                 else if (node.type == 1)
                 {
                     hy = mesh[i + kx].p.y - node.p.y;
                     A->diags[0][i] = 1.0 / hy * node.lambda + beta;
                     A->diags[4][i] = -1.0 / hy * node.lambda;
-                    b[i] = -node.lambda * du_dy(u, node.p) + beta * (u(node.p.x, node.p.y) - u_beta);
+                    b[i] = -node.lambda * du_dy(u, node.p, hy) + beta * (u(node.p.x, node.p.y) - u_beta);
                 }
                 else if (node.type == 3)
                 {
                     hy = node.p.y - mesh[i - kx].p.y;
                     A->diags[0][i] = 1.0 / hy * node.lambda + beta;
                     A->diags[2][i - kx] = -1.0 / hy * node.lambda;
-                    b[i] = node.lambda * du_dy(u, node.p) + beta * (u(node.p.x, node.p.y) - u_beta);
+                    b[i] = node.lambda * du_dy(u, node.p, hy) + beta * (u(node.p.x, node.p.y) - u_beta);
                 }
                 break;
             }
@@ -153,7 +153,7 @@ void fdm::mesh_to_slae(mesh& mesh, func2D_u& u, func2D_f& f)
 }
 
 // Решить систему и вернуть результат
-std::pair<uint32_t, double> fdm::calculate(mesh& mesh, std::vector<double>& u)
+std::pair<uint32_t, double> fdm::calculate(std::vector<double>& u)
 {
     u.resize(b.size());
 
@@ -161,74 +161,36 @@ std::pair<uint32_t, double> fdm::calculate(mesh& mesh, std::vector<double>& u)
 
     auto res = slv.solve(RELAXATION_PARAMETER, *A, b, u);
 
-    res.second = residual(mesh, u);
+    res.second = residual();
 
     return res;
 }
 
 // 1-я производная по x
-double fdm::du_dx(func2D_u& f, point& p)
+double fdm::du_dx(func2D_u& f, point& p, double hx)
 {
-    double h = 1e-5;
-    return (f(p.x + h, p.y) - f(p.x, p.y)) / h;
+    return (f(p.x + hx, p.y) - f(p.x, p.y)) / hx;
 }
 
 // 1-я производная по y
-double fdm::du_dy(func2D_u& f, point& p)
+double fdm::du_dy(func2D_u& f, point& p, double hy)
 {
-    double h = 1e-5;
-    return (f(p.x, p.y + h) - f(p.x, p.y)) / h;
+    return (f(p.x, p.y + hy) - f(p.x, p.y)) / hy;
 }
 
 // Посчитать невязку
-double fdm::residual(mesh& mesh, const std::vector<double>& u)
+double fdm::residual()
 {
-    double Lu;
     double sum = 0.0;
-    double kx = mesh.get_width() + 1;
+    double norm_b = 0.0;
 
-    if (mesh.get_type() == mesh::mesh_type::UNIFORM)
+    auto res = A->dot(exact);
+
+    for (uint32_t i = 0; i < b.size(); i++)
     {
-        double hx = mesh[1].p.x - mesh[0].p.x;
-        double hy = mesh[kx].p.y - mesh[0].p.y;
-
-        for (uint32_t i = 0; i < mesh.size(); i++)
-        {
-            auto node = mesh[i];
-
-            if (mesh[i].type == 0)
-            {
-                Lu = -node.lambda * ((u[i - 1] - 2 * u[i] + u[i + 1]) / (hx * hx) + 
-                                    (u[i - kx] - 2 * u[i] + u[i + kx]) / (hy * hy)) + 
-                                    node.gamma * u[i];
-                sum += (Lu - b[i]) * (Lu - b[i]);
-            }
-        }
+        sum += (b[i] - (*res)[i]) * (b[i] - (*res)[i]);
+        norm_b += b[i] * b[i];
     }
-    else
-    {
-        for (uint32_t i = 0; i < mesh.size(); i++)
-        {
-            auto node = mesh[i];
 
-            if (mesh[i].type == 0)
-            {
-                double hx = mesh[i + 1].p.x - node.p.x;
-                double hx_prev = node.p.x - mesh[i - 1].p.x;
-
-                double hy = mesh[i + kx].p.y - node.p.y;
-                double hy_prev = node.p.y - mesh[i - kx].p.y;
-
-                Lu = -node.lambda * (2 * u[i - 1] / (hx_prev * (hx + hx_prev)) +
-                                     2 * u[i + 1] / (hx * (hx + hx_prev)) +
-                                     2 * u[i - kx] / (hy_prev * (hy + hy_prev)) +
-                                     2 * u[i + kx] / (hy * (hy + hy_prev)) -
-                                     2 * u[i] / (hx_prev * hx) - 2 * u[i] / (hy_prev * hy)) +
-                                     node.gamma * u[i];
-                                     
-                sum += (Lu - b[i]) * (Lu - b[i]);
-            }
-        }
-    }
-    return sqrt(sum);
+    return sqrt(sum) / sqrt(norm_b);
 }

@@ -40,6 +40,9 @@ void mesh_generator::input(const std::string dir)
             file >> kr[1][i];
 
         //==========================================
+        file >> nesting;
+
+        //==========================================
         file >> n_omega;
         areas.resize(n_omega);
 
@@ -76,6 +79,42 @@ void mesh_generator::generate_xy(mesh::mesh_type& type)
 {
     double dx, dy;
     double coord;
+    
+    // Меняем коэффициенты разрядки и число разбиений
+    // в зависимости от вложенности сетки
+    if (nesting == 1)
+    {
+        for (uint32_t i = 0; i < 2; i++)
+        {
+            for (auto& it : part[i])
+                it *= 2;
+
+            for (auto& it : kr[i])
+                it = sqrt(it);
+        }
+    }
+    else if (nesting == 2)
+    {
+        for (uint32_t i = 0; i < 2; i++)
+        {
+            for (auto& it : part[i])
+                it *= 4;
+
+            for (auto& it : kr[i])
+                it = sqrt(sqrt(it));
+        }
+    }
+    else if (nesting == 3)
+    {
+        for (uint32_t i = 0; i < 2; i++)
+        {
+            for (auto& it : part[i])
+                it *= 8;
+
+            for (auto& it : kr[i])
+                it = sqrt(sqrt(sqrt(it)));
+        }
+    }
 
     // Если сетка должна быть равномерной
     if (type == mesh::mesh_type::UNIFORM)
@@ -126,7 +165,9 @@ void mesh_generator::generate_xy(mesh::mesh_type& type)
                 type = mesh::mesh_type::NONUNIFORM;
             }
             else
+            {
                 Y.push_back(coord);
+            }
         }
 
     }

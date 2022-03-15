@@ -13,6 +13,7 @@ public:
     {
         n_omega = 0;
         nx = ny = 0;
+        nesting = 0;
     }
 
     void build_mesh(mesh& mesh, mesh::mesh_type type);
@@ -29,6 +30,11 @@ private:
 
     std::vector<std::vector<uint32_t>> part; // Массив с информацией о разбиениях
     std::vector<std::vector<double>> kr;	 // Массив с коэффициентами разрядки
+
+    uint32_t nesting;                        // Вложенность сетки: 0 - обычная
+                                             //                    1 - вложенная
+                                             //                    2 - дважды вложенная
+                                             //                    3 - трижды вложенная
 
     std::vector<double> X;					 // Массив X с учетом разбиений
     std::vector<double> Y;					 // Массив Y с учетом разбиений

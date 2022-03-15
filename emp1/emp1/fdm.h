@@ -13,11 +13,13 @@ class fdm
 public:
     void mesh_to_slae(mesh& mesh, func2D_u& u, func2D_f& f);
 
-    std::pair<uint32_t, double> calculate(mesh& mesh, std::vector<double>& u);
+    std::pair<uint32_t, double> calculate(std::vector<double>& u);
 
 public:
     diagonal_matrix* A;			// Матрица СЛАУ
     std::vector<double> b;		// Вектор правой части
+
+    std::vector<double> q;
 
     std::vector<double> exact;	// Точное решение
 
@@ -26,10 +28,10 @@ public:
 
     uint32_t slae_size;			// Размер СЛАУ
 
-    double du_dx(func2D_u& f, point& p);
-    double du_dy(func2D_u& f, point& p);
+    double du_dx(func2D_u& f, point& p, double hx);
+    double du_dy(func2D_u& f, point& p, double hy);
 
-    double residual(mesh& mesh, const std::vector<double>& u);
+    double residual();
 };
 
 #endif
