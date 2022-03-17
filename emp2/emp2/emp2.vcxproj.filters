@@ -42,6 +42,9 @@
     <ClInclude Include="testing_module.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="one_dimensional_search.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mesh.cpp">
@@ -65,6 +68,9 @@
     <ClCompile Include="testing_module.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="one_dimensional_search.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="data.txt">
@@ -74,9 +80,6 @@
       <Filter>Текстовые файлы</Filter>
     </Text>
     <Text Include="dense.txt">
-      <Filter>Текстовые файлы</Filter>
-    </Text>
-    <Text Include="result.txt">
       <Filter>Текстовые файлы</Filter>
     </Text>
     <Text Include="tests\test_0.txt">

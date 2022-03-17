@@ -10,6 +10,7 @@
 typedef std::function<double(double, double)> function;
 typedef std::function<double(double, double, double)> function_f;
 typedef std::function<double(double, double, double)> function_lambda;
+typedef std::function<double(double)> min_func;
 
 const std::string directory = "C:\\Users\\lexan\\OneDrive\\Рабочий стол\\НГТУ\\6 семестр\\Уравнения математической физики\\emp2\\emp2\\";
 const std::string tests_directory = "C:\\Users\\lexan\\OneDrive\\Рабочий стол\\НГТУ\\6 семестр\\Уравнения математической физики\\emp2\\emp2\\tests\\";

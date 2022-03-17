@@ -62,6 +62,17 @@ void mfe::build_local_vector(const finite_elem& elem, const double t, const doub
 // Сборка глоабальной СЛАУ (глобального вектора и матрицы)
 void mfe::assembly_global_slae(mesh& mesh, const double t, const double delta_t)
 {
+    global_A->set_elem_to_null();
+    global_f.clear();
+    global_f.resize(q.size());
+
+    if (method_to_solve == method::NEWTON)
+    {
+        A->set_elem_to_null();
+        nl_f.clear();
+        nl_f.resize(q.size());
+    }
+
     for (uint32_t ielem = 0; ielem < mesh.get_fe_count(); ielem++)
     {
         // Собираем локальную матрицу
@@ -99,9 +110,9 @@ void mfe::assembly_global_slae(mesh& mesh, const double t, const double delta_t)
 void mfe::initial_condition(mesh& mesh)
 {
     double t0 = mesh.get_time(0);
-    q_prev[0] = u(mesh[0].x, t0);
+    q[0] = u(mesh[0].x, t0);
     for (uint32_t i = 0; i < mesh.get_fe_count(); i++)
-        q_prev[i + 1] = u(mesh[i].x_next, t0);
+        q[i + 1] = u(mesh[i].x_next, t0);
 }
 
 // Учет первого краевого условия
@@ -153,25 +164,28 @@ std::pair<uint32_t, double> mfe::solve(mesh& mesh, uint32_t max_iter, double eps
 
         for ( ; iter < max_iter; iter++)
         {
-            global_A->set_elem_to_null();
-            global_f.clear();
-            global_f.resize(q.size());
-
-            if (method_to_solve == method::NEWTON)
-            {
-                A->set_elem_to_null();
-                nl_f.clear();
-                nl_f.resize(q.size());
-            }
-
             assembly_global_slae(mesh, mesh.get_time(i), delta_t);
             first_boundary_condition(mesh, mesh.get_time(i), delta_t);
 
-            if (iter != 0 && residual() < eps)
-                break;
+            if (iter != 0)
+            {
+                if (residual() < eps)
+                    break;
+
+                //double w = 0.0;
+                //if (method_to_solve == method::SIMPLE_ITERATION)
+                //    w = one_dimensional_search::minimize(*global_A, q, q_prev_min, global_f);
+                //else
+                //    w = one_dimensional_search::minimize(*A, q, q_prev_min, nl_f);
+
+                //add_relax(w);
+
+                //if (residual() < eps)
+                //    break;
+            }
 
             slv.solve_by_LU(*global_A, global_f, q);
-            //add_relax(1.5);
+            q_prev_min = q_prev;
             q_prev = q;
         }
     }
@@ -187,7 +201,7 @@ std::pair<uint32_t, double> mfe::solve(mesh& mesh, uint32_t max_iter, double eps
 void mfe::add_relax(const double w)
 {
     for (uint32_t i = 0; i < q.size(); i++)
-        q[i] = w * q[i] + (1 - w) * q_prev[i];
+        q[i] = w * q[i] + (1 - w) * q_prev_min[i];
 }
 
 // Расчет невязки

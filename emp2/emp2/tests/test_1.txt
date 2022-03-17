@@ -4,12 +4,12 @@ Error:         5.811330e-02
 Iterations:    10
 Error:         4.113144e-02
 ----------------------
-Iterations:    13
+Iterations:    12
 Error:         2.260538e-02
 ----------------------
-Iterations:    101
-Error:         6.154411e-03
+Iterations:    71
+Error:         6.154165e-03
 ----------------------
-Iterations:    163
-Error:         7.651549e-03
+Iterations:    114
+Error:         7.652137e-03
 ----------------------

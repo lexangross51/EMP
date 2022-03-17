@@ -144,6 +144,7 @@
     <ClInclude Include="mesh.h" />
     <ClInclude Include="mesh_generator.h" />
     <ClInclude Include="mfe.h" />
+    <ClInclude Include="one_dimensional_search.h" />
     <ClInclude Include="solver.h" />
     <ClInclude Include="testing_module.h" />
   </ItemGroup>
@@ -153,13 +154,13 @@
     <ClCompile Include="mesh.cpp" />
     <ClCompile Include="mesh_generator.cpp" />
     <ClCompile Include="mfe.cpp" />
+    <ClCompile Include="one_dimensional_search.cpp" />
     <ClCompile Include="solver.cpp" />
     <ClCompile Include="testing_module.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="data.txt" />
     <Text Include="dense.txt" />
-    <Text Include="result.txt" />
     <Text Include="table.txt" />
     <Text Include="tests\test_0.txt" />
     <Text Include="tests\test_1.txt" />

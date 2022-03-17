@@ -112,7 +112,7 @@ void testing_module::run()
     mesh mesh;
     mesh_generator mg;
 
-    mg.build_mesh(mesh, mesh::mesh_type::UNIFORM, mesh::mesh_type::UNIFORM);
+    mg.build_mesh(mesh, mesh::mesh_type::NONUNIFORM, mesh::mesh_type::NONUNIFORM);
 
     mfe mfe(mesh);
 
@@ -128,7 +128,7 @@ void testing_module::run()
     table << "--------------------------------------------------------" << std::endl;
     //------------------------------------------------------------------------------
 
-    for (uint32_t i = 5; i < u.size(); i++)
+    for (uint32_t i = 0; i < u.size(); i++)
     {
         //------------------------------------------------------------------------------
         table << std::left << std::setw(15) << u_names[i] << "|";
@@ -140,7 +140,7 @@ void testing_module::run()
         {
             mfe.set_functions(u[i], f[i][j], lambda[j]);
 
-            auto res = mfe.solve(mesh, 1000, 1e-7, mfe::method::NEWTON);
+            auto res = mfe.solve(mesh, 1000, 1e-5, mfe::method::NEWTON);
 
             std::stringstream ss;
             std::string str;

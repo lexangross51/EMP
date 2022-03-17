@@ -85,7 +85,7 @@ void matrix::to_dense(const std::string dir)
     else
         throw "Can't open file";
 
-    mat.clear();
+    //mat.clear();
 }
 
 // Обнулить все элементы

@@ -7,8 +7,8 @@ Error:         4.324022e-02
 Iterations:    12
 Error:         2.865399e-02
 ----------------------
-Iterations:    140
-Error:         2.066820e-02
+Iterations:    100
+Error:         2.066776e-02
 ----------------------
 Iterations:    1000
 Error:         -nan(ind)
