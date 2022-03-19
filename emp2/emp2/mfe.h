@@ -27,7 +27,7 @@ public:
     void initial_condition(mesh& mesh);
     void first_boundary_condition(mesh& mesh, const double t, const double delta_t);
 
-    std::pair<uint32_t, double> solve(mesh& mesh, uint32_t max_iter, double eps, method method);
+    std::pair<uint32_t, double> solve(mesh& mesh, uint32_t max_iter, double eps, method method, bool use_relax);
 
 private:
     std::vector<std::vector<double>> local_A;	// Локальная матрица
@@ -42,7 +42,7 @@ private:
 
     std::vector<double> q;		    // Вектор весов на текущем временном слое
     std::vector<double> q_prev;	    // Вектор весов на предыдущем временном слое
-    std::vector<double> q_prev_min;	// Вектор весов на предыдущем временном слое (для минимизации)
+    std::vector<double> q_prev_iter;	// Вектор весов на предыдущем временном слое (для минимизации)
 
     std::vector<double> exact;	// Точное значение
 
@@ -59,6 +59,7 @@ private:
 
     void add_relax(const double w);
 
+    double step();
     double residual();
     double error(mesh& mesh);
 

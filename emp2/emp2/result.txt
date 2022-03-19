@@ -1,0 +1,16 @@
+Iterations:    1000
+Error:         -nan(ind)
+
+q*             q              |q*-q|         
+------------------------------------------
+1.84147        -nan(ind)      nan            
+1.94664        -nan(ind)      nan            
+2.06287        -nan(ind)      nan            
+2.19133        -nan(ind)      nan            
+2.3333         -nan(ind)      nan            
+2.49019        -nan(ind)      nan            
+2.66359        -nan(ind)      nan            
+2.85522        -nan(ind)      nan            
+3.06701        -nan(ind)      nan            
+3.30107        -nan(ind)      nan            
+3.55975        -nan(ind)      nan            

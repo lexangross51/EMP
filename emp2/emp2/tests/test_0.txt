@@ -1,15 +1,3 @@
-Iterations:    10
-Error:         5.336978e-02
-----------------------
-Iterations:    10
-Error:         3.845322e-02
-----------------------
-Iterations:    11
-Error:         1.767958e-02
-----------------------
-Iterations:    119
-Error:         7.592458e-03
-----------------------
-Iterations:    1000
-Error:         -nan(ind)
+Iterations:    0
+Error:         4.829785e-16
 ----------------------

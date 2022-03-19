@@ -116,13 +116,13 @@ void testing_module::run()
 
     mfe mfe(mesh);
 
-    //-------------------------------------------------
+    //------------------------------------------------------------------------------
     std::ofstream table("table.txt", std::ios::app);
     table.precision(4);
 
     table << std::left <<  std::setw(15) << "u/lambda" << "|";
-    for (const auto it : lambda_names)
-        table << std::setw(20) << it;
+    for (uint32_t i = 0; i < lambda_names.size(); i++)
+        table << std::setw(20) << lambda_names[i];
     table << std::endl;
     table << "--------------------------------------------------------";
     table << "--------------------------------------------------------" << std::endl;
@@ -140,7 +140,7 @@ void testing_module::run()
         {
             mfe.set_functions(u[i], f[i][j], lambda[j]);
 
-            auto res = mfe.solve(mesh, 1000, 1e-5, mfe::method::NEWTON);
+            auto res = mfe.solve(mesh, 5000, 1e-7, mfe::method::NEWTON, true);
 
             std::stringstream ss;
             std::string str;

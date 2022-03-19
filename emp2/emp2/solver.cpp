@@ -22,12 +22,6 @@ void solver::solve_by_LU(matrix A, std::vector<double>& f, std::vector<double>& 
     for (uint32_t i = 1; i < A.get_size(); i++)
     {
         q[i] = f[i] - q[i - 1] * A.tape[1][i - 1];
-
-        if (A.tape[0][i] == 0)
-        {
-            std::cerr << "Cannot be devided by zero!" << std::endl;
-            break;
-        }
         q[i] /= A.tape[0][i];
     }
 
