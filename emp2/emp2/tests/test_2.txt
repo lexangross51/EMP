@@ -1,3 +1,3 @@
-Iterations:    41
-Error:         1.117675e-03
+Iterations:    2
+Error:         1.044326e-03
 ----------------------

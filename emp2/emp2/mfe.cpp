@@ -175,6 +175,8 @@ std::pair<uint32_t, double> mfe::solve(mesh& mesh, uint32_t max_iter, double eps
             assembly_global_slae(mesh, mesh.get_time(i), delta_t);
             first_boundary_condition(mesh, mesh.get_time(i), delta_t);
 
+            double res = 0.0;
+
             if (residual() < eps)
                 break;
 
@@ -324,7 +326,10 @@ void mfe::linearization_newton(const finite_elem& elem, const double delta_t)
 // Производная от функции lambda по qi
 double mfe::dlambda(double q2, double q1, double h, double x, uint32_t var)
 {
-    return 1.0;
+    //return 0;
+    //return 1.0;
+
+    return exp((q2 - q1) / h);
 
     #pragma region Для универсального алгоритма (не работает)
     //switch (var)

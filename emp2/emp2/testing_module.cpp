@@ -18,7 +18,7 @@ void testing_module::set_functions()
     u[1] = [](double x, double t) { return x * x + t; };
     u[2] = [](double x, double t) { return x + t * t; };
     u[3] = [](double x, double t) { return x * x * x + t; };
-    u[4] = [](double x, double t) { return x + x * x * x + t; };
+    u[4] = [](double x, double t) { return x * x * x * x + t; };
     u[5] = [](double x, double t) { return exp(x) + sin(t); };
 
     u_names = {
@@ -112,7 +112,7 @@ void testing_module::run()
     mesh mesh;
     mesh_generator mg;
 
-    mg.build_mesh(mesh, mesh::mesh_type::NONUNIFORM, mesh::mesh_type::NONUNIFORM);
+    mg.build_mesh(mesh, mesh::mesh_type::UNIFORM, mesh::mesh_type::UNIFORM);
 
     mfe mfe(mesh);
 
@@ -136,11 +136,11 @@ void testing_module::run()
 
         std::ofstream tres(tests_directory + "test_" + std::to_string(i) + ".txt", std::ios::out | std::ios::trunc);
 
-        for (uint32_t j = 0; j < lambda.size(); j++)
+        for (uint32_t j = 4; j < lambda.size(); j++)
         {
             mfe.set_functions(u[i], f[i][j], lambda[j]);
 
-            auto res = mfe.solve(mesh, 5000, 1e-7, mfe::method::NEWTON, true);
+            auto res = mfe.solve(mesh, 5000, 1e-7, mfe::method::NEWTON, false);
 
             std::stringstream ss;
             std::string str;
