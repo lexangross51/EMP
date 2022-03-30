@@ -1,0 +1,37 @@
+{
+  "area": {
+    "x_start": 0,
+    "x_end": 10,
+    "y_start": 0,
+    "y_end": 2,
+    "z_start": 0,
+    "z_end": 4,
+    "lambda": 1,
+    "sigma": 1,
+    "hi": 1
+  },
+  "parameters": {
+    "nx": 2,
+    "ny": 2,
+    "nz": 2,
+    "kx": 1,
+    "ky": 1,
+    "kz": 1,
+    "type": 0,
+    "nested": 0
+  },
+  "boundary": {
+    "edge_1":  1,
+    "edge_2":  1,
+    "edge_3":  1,
+    "edge_4":  1,
+    "edge_5":  1,
+    "edge_6":  1,
+    "edge_7":  1,
+    "edge_8":  1,
+    "edge_9":  1,
+    "edge_10": 1,
+    "edge_11": 1,
+    "edge_12": 1
+  }
+}

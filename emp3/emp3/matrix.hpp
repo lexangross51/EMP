@@ -2,9 +2,9 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
-#include "head.h"
+#include "head.hpp"
 
-enum matrix_type
+enum class matrix_type
 {
 	DENSE,
 	PROFILE,
@@ -14,6 +14,7 @@ enum matrix_type
 class matrix
 {
 	friend class solver;
+	friend class mfe;
 
 public:
 	matrix(uint32_t _size) { dim = _size; }
@@ -23,9 +24,7 @@ public:
 	inline uint32_t size() const { return dim; };
 
 	void to_dense();
-
 	void to_sparse();
-
 	void to_profile();
 
 	void save(matrix_type type, std::string path = directory + "matrix\\");
@@ -34,7 +33,6 @@ private:
 	uint32_t dim;
 
 	std::vector<uint32_t> ig, jg;
-
 	std::vector<double> di, ggl, ggu;
 
 	std::vector<std::vector<double>> dense_matrix;

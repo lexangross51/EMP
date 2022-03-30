@@ -1,4 +1,4 @@
-#include "matrix.h"
+#include "matrix.hpp"
 
 std::unique_ptr<std::vector<double>> matrix::dot(const std::vector<double>& vector)
 {
@@ -156,7 +156,7 @@ void matrix::save(matrix_type type, std::string path)
 {
 	switch (type)
 	{
-	case DENSE: {
+	case matrix_type::DENSE: {
 		std::ofstream dense_out(path + "dense.json");
 		nlohmann::json dense{};
 
@@ -167,7 +167,7 @@ void matrix::save(matrix_type type, std::string path)
 	}
 	break;
 
-	case PROFILE: {
+	case matrix_type::PROFILE: {
 		std::ofstream profile_out(path + "profile.json");
 		nlohmann::json profile{};
 
@@ -181,7 +181,7 @@ void matrix::save(matrix_type type, std::string path)
 	}
 	break;
 
-	case SPARSE: {
+	case matrix_type::SPARSE: {
 		std::ofstream sparse_out(path + "sparse.json");
 		nlohmann::json sparse{};
 

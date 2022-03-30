@@ -140,23 +140,35 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="head.h" />
-    <ClInclude Include="matrix.h" />
-    <ClInclude Include="mesh.h" />
-    <ClInclude Include="mesh_generator.h" />
-    <ClInclude Include="solver.h" />
+    <ClInclude Include="area.hpp" />
+    <ClInclude Include="basis_function.hpp" />
+    <ClInclude Include="boundary.hpp" />
+    <ClInclude Include="finite_element.hpp" />
+    <ClInclude Include="gauss.hpp" />
+    <ClInclude Include="head.hpp" />
+    <ClInclude Include="matrix.hpp" />
+    <ClInclude Include="mesh.hpp" />
+    <ClInclude Include="mesh_generator.hpp" />
+    <ClInclude Include="mfe.hpp" />
+    <ClInclude Include="portrait_generator.hpp" />
+    <ClInclude Include="solver.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="gauss.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="matrix.cpp" />
     <ClCompile Include="mesh.cpp" />
     <ClCompile Include="mesh_generator.cpp" />
+    <ClCompile Include="mfe.cpp" />
+    <ClCompile Include="portrait_generator.cpp" />
     <ClCompile Include="solver.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="input_data\space_grid.json" />
     <None Include="matrix\dense.json" />
+    <None Include="matrix\profile.json" />
     <None Include="matrix\sparse.json" />
-    <None Include="profile.json" />
+    <None Include="mesh\mesh.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

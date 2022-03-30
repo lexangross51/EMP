@@ -2,7 +2,7 @@
 #ifndef SOLVER_H
 #define SOLVER_H
 
-#include "matrix.h"
+#include "matrix.hpp"
 
 enum iterative_method
 {
