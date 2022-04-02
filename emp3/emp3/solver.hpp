@@ -3,45 +3,50 @@
 #define SOLVER_H
 
 #include "matrix.hpp"
+#include "decomposer.hpp"
+#include "utilities.hpp"
 
-enum iterative_method
+enum class method
 {
+	LU,
 	LOS_LU,
 	BCGSTAB_LU
+};
+
+struct result
+{
+	double residual = 0;
+	uint32_t iters = 0;
+	std::chrono::microseconds time = std::chrono::microseconds(0);
 };
 
 class solver
 {
 public:
-	std::pair<uint32_t, double> solve_iterative(
-		matrix& A, 
-		std::vector<double>& b, 
-		std::vector<double>& x, 
-		iterative_method method,
+	result solve_iterative(
+		sparse_matrix& A, 
+		dvector& b, 
+		dvector& x, 
+		method method,
 		uint32_t max_iter, double eps
 	);
 
-	void solve_by_LU(matrix& A, std::vector<double>& b, std::vector<double>& x);
+	result solve_by_LU(profile_matrix& A, const dvector& b, dvector& x);
 
 private:
-	iterative_method method;
-
 	// Параметры для итерационного решателя
 	uint32_t max_iter;
 	double eps;
 
-	// Итерационные методы
-	std::pair<uint32_t, double> LOS_LU(matrix& A,
-		std::vector<double>& b,
-		std::vector<double>& x,
-		uint32_t max_iter, double eps
-	);
+	// Итерационные методы -------------------------------------------------------------
+	// Локально - оптимальная схема + LU предобуславливание
+	void LU_direct(sparse_matrix& A, const dvector& b, dvector& x);
+	void LU_reverse(sparse_matrix& A, const dvector& b, dvector& x);
 
-	std::pair<uint32_t, double> BCGSTAB_LU(matrix& A,
-		std::vector<double>& b,
-		std::vector<double>& x,
-		uint32_t max_iter, double eps
-	);
+	result LOS_LU(sparse_matrix& A, dvector& b, dvector& x);
+
+	// Метод бисопряженных градиаентов стабилизированный + LU предобуславливание
+	result BCGSTAB_LU(sparse_matrix& A, dvector& b, dvector& x);
 };
 
 #endif

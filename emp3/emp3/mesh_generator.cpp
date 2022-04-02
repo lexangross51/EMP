@@ -8,7 +8,6 @@ space_grid_generator::space_grid_generator()
 	kx = ky = kz = 0.0;
 	type = mesh_type::UNIFORM;
 	nested = 0;
-	//bconds.resize(12);
 }
 
 void space_grid_generator::read_data(std::string path)
@@ -41,22 +40,6 @@ void space_grid_generator::read_data(std::string path)
 		kz = space_grid["parameters"]["kz"];
 		type = space_grid["parameters"]["type"];
 		nested = space_grid["parameters"]["nested"];
-
-		//bconds = {
-		//	{1, space_grid["boundary"]["edge_1"]},
-		//	{2, space_grid["boundary"]["edge_2"]},
-		//	{3, space_grid["boundary"]["edge_3"]},
-		//	{4, space_grid["boundary"]["edge_4"]},
-		//	{5, space_grid["boundary"]["edge_5"]},
-		//	{6, space_grid["boundary"]["edge_6"]},
-		//	{7, space_grid["boundary"]["edge_7"]},
-		//	{8, space_grid["boundary"]["edge_8"]},
-		//	{9, space_grid["boundary"]["edge_9"]},
-		//	{10, space_grid["boundary"]["edge_10"]},
-		//	{11, space_grid["boundary"]["edge_11"]},
-		//	{12, space_grid["boundary"]["edge_12"]},
-		//};
-
 	}
 	else throw "Can't open file\n";
 }
@@ -120,7 +103,7 @@ void space_grid_generator::generate_nodes()
 	}
 }
 
-void space_grid_generator::make_bc(space_grid*& grid)
+void space_grid_generator::make_bc(space_grid*& grid, function3D& us, function3D& uc)
 {
 	// Формируем 1-ые краевые условия ------------------------------
 	std::set<uint32_t> dirichlet;
@@ -131,15 +114,22 @@ void space_grid_generator::make_bc(space_grid*& grid)
 		for (uint32_t j = 0; j < grid->faces[i].nodes.size(); j++)
 			dirichlet.insert(grid->faces[i].nodes[j]);
 
-	grid->dirichlet.resize(dirichlet.size());
+	grid->dirichlet.resize(2 * dirichlet.size());
+
+	uint32_t i = 0;
 
 	for (const auto& it : dirichlet)
-		grid->dirichlet[dirichlet_counter++] = { it, 0.0 };
+	{
+		point3D point = grid->get_point(it);
+		grid->dirichlet[2 * i] = { 2 * it, us(point.x, point.y, point.z) };
+		grid->dirichlet[2 * i + 1] = { 2 * it + 1, uc(point.x, point.y, point.z) };
+		i++;
+	}
 
 	dirichlet.clear();
 }
 
-void space_grid_generator::build_mesh(space_grid*& grid)
+void space_grid_generator::build_mesh(space_grid*& grid, function3D& us, function3D& uc)
 {
 	read_data();
 	generate_nodes();
@@ -248,5 +238,5 @@ void space_grid_generator::build_mesh(space_grid*& grid)
 		}
 	}
 
-	make_bc(grid);
+	make_bc(grid, us, uc);
 }

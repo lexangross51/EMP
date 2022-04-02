@@ -22,11 +22,11 @@ class space_grid_generator : public grid_generator
 public:
 	space_grid_generator();
 
-	void build_mesh(space_grid*& grid);
+	void build_mesh(space_grid*& grid, function3D& us, function3D& uc);
 
 private:
 	// -------------------------------------------------------------
-	std::vector<double> x, y, z;
+	dvector x, y, z;
 	area* area_xyz;
 	uint32_t nx, ny, nz;
 	double kx, ky, kz;
@@ -40,7 +40,7 @@ private:
 
 	void generate_nodes() override;
 
-	void make_bc(space_grid*& grid);
+	void make_bc(space_grid*& grid, function3D& us, function3D& uc);
 };
 
 #endif

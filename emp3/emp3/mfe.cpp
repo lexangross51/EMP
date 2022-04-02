@@ -6,10 +6,13 @@ mfe::mfe(space_grid& mesh)
 
 	w = 0.0;
 
-	A = new matrix(2 * grid->get_nodes_count());
+	A = new sparse_matrix(2 * grid->get_nodes_count());
 
 	local_p.resize(8);
 	local_c.resize(8);
+
+	G.resize(8);
+	M.resize(8);
 
 	local_vec_fs.resize(8);
 	local_vec_fc.resize(8);
@@ -18,6 +21,9 @@ mfe::mfe(space_grid& mesh)
 	{
 		local_p[i].resize(8);
 		local_c[i].resize(8);
+
+		G[i].resize(8);
+		M[i].resize(8);
 	}
 }
 
@@ -37,9 +43,6 @@ void mfe::build_local_matrices(finite_elem& elem)
 			{
 				point3D point(x, y, z);
 
-				double psi_i = bf.psi(i, point);
-				double psi_j = bf.psi(j, point);
-
 				double d_psi_i_x = bf.d_psi(i, 1, point);
 				double d_psi_j_x = bf.d_psi(j, 1, point);
 
@@ -49,14 +52,10 @@ void mfe::build_local_matrices(finite_elem& elem)
 				double d_psi_i_z = bf.d_psi(i, 3, point);
 				double d_psi_j_z = bf.d_psi(j, 3, point);
 
-				return (elem.lambda * (
-					d_psi_i_x * d_psi_j_x + 
-					d_psi_i_y * d_psi_j_y + 
-					d_psi_i_z * d_psi_j_z
-				) - w * w * elem.hi * psi_i * psi_j);
+				return (d_psi_i_x * d_psi_j_x + d_psi_i_y * d_psi_j_y + d_psi_i_z * d_psi_j_z);
 			};
 
-			local_p[i][j] = local_p[j][i] = gauss.integrate3D(f, omega);
+			G[i][j] = G[j][i] = gauss.integrate3D(f, omega);
 
 
 			// -----------------------------------------------------------
@@ -67,48 +66,48 @@ void mfe::build_local_matrices(finite_elem& elem)
 				double psi_i = bf.psi(i, point);
 				double psi_j = bf.psi(j, point);
 
-				return w * elem.sigma * psi_i * psi_j;
+				return psi_i * psi_j;
 			};
 
-			local_c[i][j] = local_c[j][i] = gauss.integrate3D(f, omega);
+			M[i][j] = M[j][i] = gauss.integrate3D(f, omega);
+
+			local_p[i][j] = local_p[j][i] = elem.lambda * G[i][j] - w * w * elem.hi * M[i][j];
+			local_c[i][j] = local_c[j][i] = w * elem.sigma * M[i][j];
 		}
 	}
 }
 
-void mfe::build_local_vector(finite_elem& elem, r_function3D& fs, r_function3D& fc)
+void mfe::build_local_vectors(finite_elem& elem, r_function3D& fs, r_function3D& fc)
 {
-	omega omega = { point3D(grid->get_point(elem[0])), point3D(grid->get_point(elem[7])) };
+	dvector fs_vec(8);
+	dvector fc_vec(8);
 
-	basis_function bf(omega);
+	local_vec_fs.clear();
+	local_vec_fc.clear();
 
-	function3D f;
+	local_vec_fs.resize(8);
+	local_vec_fc.resize(8);
+
 
 	for (uint8_t i = 0; i < 8; i++)
 	{
-		f = [&](double x, double y, double z)
-		{
-			point3D point(x, y, z);
+		point3D point = grid->get_point(elem[i]);
 
-			double psi_i = bf.psi(i, point);
-
-			return fs(x, y, z, elem.lambda, elem.sigma, elem.hi, w) * psi_i;
-		};
-
-		local_vec_fs[i] = gauss.integrate3D(f, omega);
-
-
-		// -----------------------------------------------------------
-		f = [&](double x, double y, double z)
-		{
-			point3D point(x, y, z);
-
-			double psi_i = bf.psi(i, point);
-
-			return fc(x, y, z, elem.lambda, elem.sigma, elem.hi, w) * psi_i;
-		};
-
-		local_vec_fc[i] = gauss.integrate3D(f, omega);
+		fs_vec[i] = fs(point.x, point.y, point.z, elem.lambda, elem.sigma, elem.hi, w);
+		fc_vec[i] = fc(point.x, point.y, point.z, elem.lambda, elem.sigma, elem.hi, w);
 	}
+
+	for (uint8_t i = 0; i < 8; i++)
+	{
+		for (uint8_t j = 0; j < 8; j++)
+		{
+			local_vec_fs[i] += M[i][j] * fs_vec[j];
+			local_vec_fc[i] += M[i][j] * fc_vec[j];
+		}
+	}
+
+	fs_vec.clear();
+	fc_vec.clear();
 }
 
 void mfe::add_to_global_matrix(const uint32_t i, const uint32_t j, const double val)
@@ -158,50 +157,7 @@ void mfe::assembly_global_matrix_and_vector(r_function3D& fs, r_function3D& fc)
 
 		build_local_matrices(elem);
 
-		#pragma region Проверка
-		//std::cout.precision(3);
-
-		//std::cout << "LOCAL P\n";
-		//for (uint32_t j = 0; j < 8; j++)
-		//{ 
-		//	for (uint32_t k = 0; k < 8; k++)
-		//		std::cout << local_p[j][k] << "    ";
-		//	std::cout << std::endl;
-		//}
-
-		//std::cout << "LOCAL C\n";
-		//for (uint32_t j = 0; j < 8; j++)
-		//{
-		//	for (uint32_t k = 0; k < 8; k++)
-		//		std::cout << local_c[j][k] << "    ";
-		//	std::cout << std::endl;
-		//}
-		//std::cout << "---------------------------------------------------------------------\n";
-		//std::cout << std::endl;
-		#pragma endregion
-
-		// ------------------------------------------------------------
-		build_local_vector(elem, fs, fc);
-
-		#pragma region Проверка
-		//std::cout.precision(3);
-
-		//std::cout << "LOCAL FS\n";
-		//for (uint32_t j = 0; j < 8; j++)
-		//{ 
-		//	std::cout << local_vec_fs[j] << "    ";
-		//}
-
-		//std::cout << std::endl;
-		//std::cout << "LOCAL FC\n";
-		//for (uint32_t j = 0; j < 8; j++)
-		//{
-		//	std::cout << local_vec_fc[j] << "    ";
-		//}
-		//std::cout << std::endl;
-		//std::cout << "---------------------------------------------------------------------\n";
-		//std::cout << std::endl;
-		#pragma endregion
+		build_local_vectors(elem, fs, fc);
 
 		for (uint8_t i = 0; i < 8; i++)
 		{
@@ -217,4 +173,64 @@ void mfe::assembly_global_matrix_and_vector(r_function3D& fs, r_function3D& fc)
 			}
 		}
 	}
+
+	add_dirichlet();
+}
+
+void mfe::add_dirichlet()
+{
+	for (uint32_t i = 0; i < grid->get_first_bound_count(); i++)
+	{
+		auto cond = grid->get_dirichlet_cond(i);
+
+		A->di[cond.node] = 1.0;
+		b[cond.node] = cond.value;
+
+		// Обнуляем строку
+		uint32_t i0 = A->ig[cond.node];
+		uint32_t i1 = A->ig[cond.node + 1];
+
+		for (uint32_t k = i0; k < i1; k++)
+			A->ggl[k] = 0.0;
+
+		for (uint32_t k = i + 1; k < A->size(); k++)
+		{
+			uint32_t i0 = A->ig[k];
+			uint32_t i1 = A->ig[k + 1];
+
+			for (uint32_t j = i0; j < i1; j++)
+			{
+				if (A->jg[j] == cond.node)
+					A->ggu[j] = 0.0;
+			}
+		}
+	}
+}
+
+result mfe::solve(method method_to_solve)
+{
+	q.clear();
+
+	result res;
+
+	res.iters = 0;
+	res.residual = 0;
+	res.time = std::chrono::microseconds(0);
+
+	solver slv;
+
+	if (method_to_solve == method::LU)
+	{
+		res = slv.solve_by_LU(*(A->to_profile()), b, q);
+	}
+	else if (method_to_solve == method::LOS_LU)
+	{
+		res = slv.solve_iterative(*A, b, q, method::LOS_LU, 1000, 1e-16);
+	}
+	else if (method_to_solve == method::BCGSTAB_LU)
+	{
+		res = slv.solve_iterative(*A, b, q, method::BCGSTAB_LU, 1000, 1e-16);
+	}
+
+	return res;
 }

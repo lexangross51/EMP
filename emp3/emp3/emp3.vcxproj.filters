@@ -63,6 +63,15 @@
     <ClInclude Include="portrait_generator.hpp">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="decomposer.hpp">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities.hpp">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="tests.hpp">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="matrix.cpp">
@@ -89,6 +98,12 @@
     <ClCompile Include="portrait_generator.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="decomposer.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="tests.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="matrix\sparse.json">
@@ -106,5 +121,22 @@
     <None Include="mesh\mesh.json">
       <Filter>Сетка</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="tests\omega_tests.txt">
+      <Filter>Результат</Filter>
+    </Text>
+    <Text Include="tests\lambda_tests.txt">
+      <Filter>Результат</Filter>
+    </Text>
+    <Text Include="tests\sigma_tests.txt">
+      <Filter>Результат</Filter>
+    </Text>
+    <Text Include="tests\hi_tests.txt">
+      <Filter>Результат</Filter>
+    </Text>
+    <Text Include="tests\omega_tests_diffs.txt">
+      <Filter>Результат</Filter>
+    </Text>
   </ItemGroup>
 </Project>

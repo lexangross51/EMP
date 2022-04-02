@@ -143,6 +143,7 @@
     <ClInclude Include="area.hpp" />
     <ClInclude Include="basis_function.hpp" />
     <ClInclude Include="boundary.hpp" />
+    <ClInclude Include="decomposer.hpp" />
     <ClInclude Include="finite_element.hpp" />
     <ClInclude Include="gauss.hpp" />
     <ClInclude Include="head.hpp" />
@@ -152,8 +153,11 @@
     <ClInclude Include="mfe.hpp" />
     <ClInclude Include="portrait_generator.hpp" />
     <ClInclude Include="solver.hpp" />
+    <ClInclude Include="tests.hpp" />
+    <ClInclude Include="utilities.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="decomposer.cpp" />
     <ClCompile Include="gauss.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="matrix.cpp" />
@@ -162,6 +166,7 @@
     <ClCompile Include="mfe.cpp" />
     <ClCompile Include="portrait_generator.cpp" />
     <ClCompile Include="solver.cpp" />
+    <ClCompile Include="tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="input_data\space_grid.json" />
@@ -169,6 +174,13 @@
     <None Include="matrix\profile.json" />
     <None Include="matrix\sparse.json" />
     <None Include="mesh\mesh.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="tests\hi_tests.txt" />
+    <Text Include="tests\lambda_tests.txt" />
+    <Text Include="tests\omega_tests.txt" />
+    <Text Include="tests\omega_tests_diffs.txt" />
+    <Text Include="tests\sigma_tests.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

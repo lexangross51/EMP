@@ -11,27 +11,13 @@
     "hi": 1
   },
   "parameters": {
-    "nx": 2,
-    "ny": 2,
-    "nz": 2,
+    "nx": 4,
+    "ny": 4,
+    "nz": 4,
     "kx": 1,
     "ky": 1,
     "kz": 1,
     "type": 0,
     "nested": 0
-  },
-  "boundary": {
-    "edge_1":  1,
-    "edge_2":  1,
-    "edge_3":  1,
-    "edge_4":  1,
-    "edge_5":  1,
-    "edge_6":  1,
-    "edge_7":  1,
-    "edge_8":  1,
-    "edge_9":  1,
-    "edge_10": 1,
-    "edge_11": 1,
-    "edge_12": 1
   }
 }

@@ -52,7 +52,7 @@ public:
 		points.clear();
 		faces.clear();
 		dirichlet.clear();
-		neumann.clear();
+		//neumann.clear();
 	}
 
 	inline uint32_t get_width(void) const { return nx; }
@@ -66,12 +66,29 @@ public:
 	inline point3D& get_point(const uint32_t index) { return points[index]; }
 
 	inline uint32_t get_first_bound_count(void) const { return dirichlet.size(); }
-	inline uint32_t get_second_bound_count(void) const { return neumann.size(); }
-
 	inline dirichlet_cond& get_dirichlet_cond(const uint32_t num) { return dirichlet[num]; }
-	inline neumann_cond& get_neumann_cond(const uint32_t num) { return neumann[num]; }
 
 	void save(std::string path = directory + "mesh\\") override;
+
+
+	// ÄËß ÒÅÑÒÎÂ
+	void set_lambda(const double lambda)
+	{
+		for (uint32_t i = 0; i < elems.size(); i++)
+			elems[i].lambda = lambda;
+	}
+
+	void set_sigma(const double sigma)
+	{
+		for (uint32_t i = 0; i < elems.size(); i++)
+			elems[i].sigma = sigma;
+	}
+
+	void set_hi(const double hi)
+	{
+		for (uint32_t i = 0; i < elems.size(); i++)
+			elems[i].hi = hi;
+	}
 
 private:
 	uint32_t nx, ny, nz;
@@ -81,7 +98,7 @@ private:
 	std::vector<face> faces;
 
 	std::vector<dirichlet_cond> dirichlet;
-	std::vector<neumann_cond> neumann;
+	//std::vector<neumann_cond> neumann;
 };
 
 #endif

@@ -62,27 +62,25 @@ struct basis_function
 
 	double d_psi(uint8_t ifunc, uint8_t ivar, point3D& point)
 	{
-		double h = 1e-7;
-
 		switch (ivar)
 		{
 		case 1: {
 			point3D next = point, prev = point;
-			next.x += h;
-			prev.x -= h;
-			return (psi(ifunc, next) - psi(ifunc, prev)) / (2 * h);
+			next.x += hx;
+			prev.x -= hx;
+			return (psi(ifunc, next) - psi(ifunc, prev)) / (2 * hx);
 		}
 		case 2: {
 			point3D next = point, prev = point;
-			next.y += h;
-			prev.y -= h;
-			return (psi(ifunc, next) - psi(ifunc, prev)) / (2 * h);
+			next.y += hy;
+			prev.y -= hy;
+			return (psi(ifunc, next) - psi(ifunc, prev)) / (2 * hy);
 		}
 		case 3: {
 			point3D next = point, prev = point;
-			next.z += h;
-			prev.z -= h;
-			return (psi(ifunc, next) - psi(ifunc, prev)) / (2 * h);
+			next.z += hz;
+			prev.z -= hz;
+			return (psi(ifunc, next) - psi(ifunc, prev)) / (2 * hz);
 		}
 		}
 	}
