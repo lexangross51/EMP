@@ -1,10 +1,11 @@
+// ================  MAIN.CPP ================
 #include "tests.hpp"
 
 int main()
 {
-	tests test;
+    tests test;
 
-	test.run();
+    test.run();
 
-	return 0;
+    return 0;
 }

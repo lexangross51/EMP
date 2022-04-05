@@ -116,7 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\lexan\OneDrive\Рабочий стол\НГТУ\6 семестр\Уравнения математической физики\emp3\emp3\dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\lexan\OneDrive\Рабочий стол\НГТУ\6 семестр\Уравнения математической физики\emp3\emp3\dependencies\include;C:\Users\lexan\OneDrive\Рабочий стол\НГТУ\6 семестр\Уравнения математической физики\emp3\emp3\dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,6 +131,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\lexan\OneDrive\Рабочий стол\НГТУ\6 семестр\Уравнения математической физики\emp3\emp3\dependencies\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -179,7 +180,6 @@
     <Text Include="tests\hi_tests.txt" />
     <Text Include="tests\lambda_tests.txt" />
     <Text Include="tests\omega_tests.txt" />
-    <Text Include="tests\omega_tests_diffs.txt" />
     <Text Include="tests\sigma_tests.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

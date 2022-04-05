@@ -1,3 +1,4 @@
+// ================ UTILITIES.HPP ================
 #pragma once
 #ifndef UTILITIES_HPP
 #define UTILITIES_HPP
@@ -6,52 +7,52 @@
 
 inline static double norm(dvector& vector)
 {
-	double scalar = 0.0;
+    double scalar = 0.0;
 
-	for (const auto& it : vector)
-		scalar += it * it;
+    for (const auto& it : vector)
+        scalar += it * it;
 
-	return sqrt(scalar);
+    return sqrt(scalar);
 }
 
 inline static dvector operator+(const dvector& v1, const dvector& v2)
 {
-	dvector result = v1;
+    dvector result = v1;
 
-	for (uint32_t i = 0; i < result.size(); i++)
-		result[i] += v2[i];
+    for (uint32_t i = 0; i < result.size(); i++)
+        result[i] += v2[i];
 
-	return result;
+    return result;
 }
 
 inline static dvector operator-(const dvector& v1, const dvector& v2)
 {
-	dvector result = v1;
+    dvector result = v1;
 
-	for (uint32_t i = 0; i < result.size(); i++)
-		result[i] -= v2[i];
+    for (uint32_t i = 0; i < result.size(); i++)
+        result[i] -= v2[i];
 
-	return result;
+    return result;
 }
 
 inline static double operator*(const dvector& v1, const dvector& v2)
 {
-	double scalar = 0.0;
+    double scalar = 0.0;
 
-	for (uint32_t i = 0; i < v1.size(); i++)
-		scalar += v1[i] * v2[i];
+    for (uint32_t i = 0; i < v1.size(); i++)
+        scalar += v1[i] * v2[i];
 
-	return scalar;
+    return scalar;
 }
 
 inline static dvector operator*(const double c, const dvector& v)
 {
-	dvector result = v;
+    dvector result = v;
 
-	for (uint32_t i = 0; i < result.size(); i++)
-		result[i] *= c;
+    for (uint32_t i = 0; i < result.size(); i++)
+        result[i] *= c;
 
-	return result;
+    return result;
 }
 
 #endif

@@ -1,14 +1,15 @@
+// ================  MATRIX.HPP ================
 #pragma once
-#ifndef MATRIX_H
-#define MATRIX_H
+#ifndef MATRIX_HPP
+#define MATRIX_HPP
 
 #include "head.hpp"
 
 enum class matrix_type
 {
-	DENSE,
-	PROFILE,
-	SPARSE
+    DENSE,
+    PROFILE,
+    SPARSE
 };
 
 // ============================================================================
@@ -16,28 +17,28 @@ enum class matrix_type
 // ============================================================================
 class profile_matrix
 {
-	friend class solver;
-	friend class decomposer;
-	friend class sparse_matrix;
+    friend class solver;
+    friend class decomposer;
+    friend class sparse_matrix;
 
 public:
-	profile_matrix(uint32_t _size) { dim = _size; }
+    profile_matrix(uint32_t _size) { dim = _size; }
 
-	std::unique_ptr<dvector> dot(const dvector& vector);
+    std::unique_ptr<dvector> dot(const dvector& vector);
 
-	inline uint32_t size() const { return dim; };
+    inline uint32_t size() const { return dim; };
 
-	void to_dense();
+    void to_dense();
 
-	void save(matrix_type type, std::string path = directory + "matrix\\");
+    void save(matrix_type type, std::string path = directory + "matrix\\");
 
 public:
-	uint32_t dim;
+    uint32_t dim;
 
-	std::vector<uint32_t> ig;
-	dvector di, ggl, ggu;
+    std::vector<uint32_t> ig;
+    dvector di, ggl, ggu;
 
-	std::vector<dvector> dense_matrix;
+    std::vector<dvector> dense_matrix;
 };
 
 
@@ -46,29 +47,29 @@ public:
 // ============================================================================
 class sparse_matrix
 {
-	friend class solver;
-	friend class mfe;
-	friend class decomposer;
+    friend class solver;
+    friend class mfe;
+    friend class decomposer;
 
 public:
-	sparse_matrix(uint32_t _size) { dim = _size; }
+    sparse_matrix(uint32_t _size) { dim = _size; }
 
-	std::unique_ptr<dvector> dot(const dvector& vector);
+    std::unique_ptr<dvector> dot(const dvector& vector);
 
-	inline uint32_t size() const { return dim; };
+    inline uint32_t size() const { return dim; };
 
-	void to_dense();
-	profile_matrix* to_profile();
+    void to_dense();
+    profile_matrix* to_profile();
 
-	void save(matrix_type type, std::string path = directory + "matrix\\");
+    void save(matrix_type type, std::string path = directory + "matrix\\");
 
 public:
-	uint32_t dim;
+    uint32_t dim;
 
-	std::vector<uint32_t> ig, jg;
-	dvector di, ggl, ggu;
+    std::vector<uint32_t> ig, jg;
+    dvector di, ggl, ggu;
 
-	std::vector<dvector> dense_matrix;
+    std::vector<dvector> dense_matrix;
 };
 
 #endif

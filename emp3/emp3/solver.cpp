@@ -1,3 +1,4 @@
+// ================  SOLVER.CPP ================
 #include "solver.hpp"
 
 // ======================================= ПРЯМОЙ РЕШАТЕЛЬ ===========================================
@@ -10,7 +11,7 @@ result solver::solve_by_LU(profile_matrix& A, const dvector& b, dvector& x)
     decomposer::LU(A);
 
     // ----------------------------------------------------------
-	// Прямой ход
+    // Прямой ход
     x.resize(b.size());
 
     double sum = 0.0;
@@ -21,12 +22,12 @@ result solver::solve_by_LU(profile_matrix& A, const dvector& b, dvector& x)
         uint32_t i0 = A.ig[i];
         uint32_t i1 = A.ig[i + 1];
 
-		uint32_t j = i - (i1 - i0);
+        uint32_t j = i - (i1 - i0);
 
-		sum = 0.0;
+        sum = 0.0;
 
-		for (uint32_t k = i0; k < i1; k++)
-			sum += A.ggl[k] * x[j++];
+        for (uint32_t k = i0; k < i1; k++)
+            sum += A.ggl[k] * x[j++];
         
         x[i] = (b[i] - sum) / A.di[i];
     }
@@ -40,7 +41,7 @@ result solver::solve_by_LU(profile_matrix& A, const dvector& b, dvector& x)
 
         uint32_t j = i - (i1 - i0);
 
-		for (uint32_t k = i0; k < i1; k++)
+        for (uint32_t k = i0; k < i1; k++)
             x[j++] -= A.ggu[k] * x[i];
     }
 

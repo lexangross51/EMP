@@ -1,3 +1,4 @@
+// ================  DECOMPOSER.HPP ================
 #include "decomposer.hpp"
 
 void decomposer::LU(sparse_matrix& A)

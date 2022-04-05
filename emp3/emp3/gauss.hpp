@@ -1,3 +1,4 @@
+// ================  GAUSS.HPP ================
 #pragma once
 #ifndef GAUSS_HPP
 #define GAUSS_HPP
@@ -8,13 +9,13 @@
 class gauss
 {
 public:
-	gauss();
+    gauss();
 
-	double integrate3D(function3D& f, omega& omega);
+    double integrate3D(function3D& f, omega& omega);
 
 private:
-	std::array<double, 3> gauss_points;
-	std::array<double, 3> gauss_weights;
+    std::array<double, 3> gauss_points;
+    std::array<double, 3> gauss_weights;
 };
 
 #endif

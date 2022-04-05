@@ -1,6 +1,7 @@
+// ================  TESTS.HPP ================
 #pragma once
-#ifndef TESTS
-#define TESTS
+#ifndef TESTS_HPP
+#define TESTS_HPP
 
 #include "mesh.hpp"
 #include "mesh_generator.hpp"
@@ -8,25 +9,33 @@
 #include "solver.hpp"
 #include "utilities.hpp"
 
+struct test_functions
+{
+    function3D us, uc;
+    r_function3D fs, fc;
+};
+
 class tests
 {
 public:
-	void run();
+    tests();
+
+    void run();
 
 private:
-	void omega_tests();
+    void omega_tests();
 
-	void lambda_tests();
+    void lambda_tests();
 
-	void sigma_tests();
+    void sigma_tests();
 
-	void hi_tests();
+    void hi_tests();
 
-	void calc_exact(space_grid& grid);
+    void calc_exact(space_grid& grid);
 
-	void print_diff(dvector& solution, std::ofstream& file, std::string method);
+    dvector exact;
 
-	dvector exact;
+    std::vector<test_functions> funcs;
 };
 
 #endif
