@@ -1,0 +1,25 @@
+{
+  "area": {
+    "Rw": 0,
+    "Rb": 5,
+    "depth":  0,
+    "heights": [5],
+    "lambda": [1],
+    "sigma": [100],
+    "hi": [1e-3]
+  },
+  "parameters": {
+    "nr": 10,
+    "nz": [ 10 ],
+    "kr": 0.8,
+    "kz": [ 0.8 ],
+    "type": 1,
+    "nested": 0
+  },
+  "boundary": {
+    "border_1": 1,
+    "border_2": 1,
+    "border_3": 1,
+    "border_4": [0, 5]
+  }
+}

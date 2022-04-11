@@ -1,0 +1,12 @@
+{
+  "time_interval": {
+    "time_begin": 0,
+    "time_end": 1
+  },
+  "parameters": {
+    "nt": 10,
+    "kt": 1,
+    "type": 0,
+    "nested" : 0
+  }
+}
